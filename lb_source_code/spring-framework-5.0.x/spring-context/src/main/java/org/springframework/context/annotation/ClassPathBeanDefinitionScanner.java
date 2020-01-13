@@ -300,7 +300,10 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 					definitionHolder =
 							AnnotationConfigUtils.applyScopedProxyMode(scopeMetadata, definitionHolder, this.registry);
 					beanDefinitions.add(definitionHolder);
-					//加入到map当中
+					//加入到map当中--registerBeanDefinition--注册单个bdf--指向最前面是再configurationClassParser中执行
+					// Set<BeanDefinitionHolder> scannedBeanDefinitions =
+					//	this.componentScanParser.parse(componentScan, sourceClass.getMetadata().getClassName());
+					//		返回了一个被执行生成的bdf集合（）；				传入集合循环执行到这里--
 					registerBeanDefinition(definitionHolder, this.registry);
 				}
 			}

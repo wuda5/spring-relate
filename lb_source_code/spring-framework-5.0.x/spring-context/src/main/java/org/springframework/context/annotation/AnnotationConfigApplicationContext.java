@@ -120,7 +120,16 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 		 * 子路的：
 		 * 		//可以用来扫描包或者类，继而转换成bd
 		 * 		//但是实际上我们扫描包工作不是scanner这个对象来完成的
-		 * 		//是spring自己new的一个ClassPathBeanDefinitionScanner
+		 * 		//是spring自己new的一个ClassPathBeanDefinitionScanner--具体是哪里呢？是由上面的 哪个AnnotatedBeanDefinitionReader 对象reader
+		 * 	在自己内部搞出来？然后调用xxx 完成默认扫描工作，所以上面哪个 reader	其实是spring最核心的！！
+		 *
+		 * 	哪里搞出来的？是名字？--在reader 内部它要注册 7个内置的spring xx时候，其中一个很重要的 一个 ConfigruatinClassPostProcessor 的 BeanFactoryPostProcess接口的实现时，
+		 * 	这个 ConfigruatinClassPostProcessor 内部呢又有个属性：ConfigurationClassBeanDefinitionReader(和上下文this关系),  MetadataReaderFactory
+		 * 	private MetadataReaderFactory metadataReaderFactory = new CachingMetadataReaderFactory();
+		 * 	你在new 时它的属性 MetadataReaderFactory 也会被new了，而后面所扫描用到的起作用的就是这个 ConfigurationClassBeanDefinitionReader+ CachingMetadataReaderFactory？
+		 *
+		 * 	而他 reader 里面的那个 BeanFactoryPostProcessor( ConfigurationClassPostProcessor)是他的最重要的类！！
+		 *
 		 * 		//这里的scanner仅仅是为了程序员能够在外部调用AnnotationConfigApplicationContext对象的scan方法
 		 */
 		this.scanner = new ClassPathBeanDefinitionScanner(this);

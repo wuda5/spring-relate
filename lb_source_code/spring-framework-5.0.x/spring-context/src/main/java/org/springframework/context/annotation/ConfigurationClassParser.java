@@ -249,6 +249,7 @@ class ConfigurationClassParser {
 		// Recursively process the configuration class and its superclass hierarchy.--底层调用注解method.invoke得到注解上面的信息：如包路径，SourceClass=
 		SourceClass sourceClass = asSourceClass(configClass);
 		do {
+			/**重要！**/
 			sourceClass = doProcessConfigurationClass(configClass, sourceClass);
 		}
 		while (sourceClass != null);
@@ -295,7 +296,8 @@ class ConfigurationClassParser {
 				// The config class is annotated with @ComponentScan -> perform the scan immediately
 				//扫描普通类=componentScan=com.luban
 				//这里扫描出来所有@@Component
-				//并且把扫描的出来的普通bean（bd注册）放到map当中
+				//并且把扫描的出来的普通bean（bd注册 --最底层起作用方法是：ClassPathBeanDefinitionScanner中调用：
+				// registerBeanDefinition(definitionHolder, this.registry);）放到map当中
 				Set<BeanDefinitionHolder> scannedBeanDefinitions =
 						this.componentScanParser.parse(componentScan, sourceClass.getMetadata().getClassName());
 				// Check the set of scanned definitions for any further config classes and parse recursively if needed

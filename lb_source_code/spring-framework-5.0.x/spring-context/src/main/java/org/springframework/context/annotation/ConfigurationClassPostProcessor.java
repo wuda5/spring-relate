@@ -275,6 +275,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		 */
 		for (String beanName : candidateNames) {
 			BeanDefinition beanDef = registry.getBeanDefinition(beanName);
+			/**整个if的判断意思是判断整个bdf 是否已经有被处理过，如果处理了的有加标志，第一次来是肯定没有被处理的，进入下面esle*/
 			if (ConfigurationClassUtils.isFullConfigurationClass(beanDef) ||
 					ConfigurationClassUtils.isLiteConfigurationClass(beanDef)) {
 				//果BeanDefinition中的configurationClass属性为full或者lite,则意味着已经处理过了,直接跳过
@@ -342,6 +343,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		Set<BeanDefinitionHolder> candidates = new LinkedHashSet<>(configCandidates);
 		Set<ConfigurationClass> alreadyParsed = new HashSet<>(configCandidates.size());
 		do {
+			/**重要：！！完成其他bean的扫描！*/
 			parser.parse(candidates);
 			parser.validate();
 			//map.keyset
