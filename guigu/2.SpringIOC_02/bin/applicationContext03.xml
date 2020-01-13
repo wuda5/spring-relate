@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<bean id="car" class="com.atguigu.bean.Car">
+		<property name="carName" value="宝马"></property>
+		<property name="color" value="白色"></property>
+	</bean><!--  -->
+	
+	<!-- <bean id="car02" class="com.atguigu.bean.Car">
+		<property name="carName" value="BWM"></property>
+		<property name="color" value="白色"></property>
+	</bean> --> <!-- -->
+	
+	
+	<!-- 为Person里面的自定义类型的属性赋值 
+		property：手动赋值
+		自动赋值（自动装配）：
+		
+	自动装配：（仅限于对自定义类型的属性有效）
+	autowire="default/no"：不自动装配；不自动为car属性赋值
+	
+	//按照某种规则自动装配
+	autowire="byName"：按照名字；
+			private Car car;
+				1)、以属性名(car)作为id去容器中找到这个组件，给他赋值；如果找不到就装配null；
+				car = ioc.getBean("car");
+	autowire="byType":
+			private Car car;
+				1)、以属性的类型作为查找依据去容器中找到这个组件；如果容器中有多个这葛类型的组件，报错；
+				NoUniqueBeanDefinitionException: 
+				No qualifying bean of type [com.atguigu.bean.Car] is defined: 
+				expected single matching bean but found 2: car01,car02
+				2)、没找到呢？装配null
+				car = ioc.getBean(Car.class);
+				
+	autowire="constructor":
+		public Person(Car car) 
+			按照构造器进行赋值；
+			1）、先按照有参构造器参数的类型进行装配（成功就赋值）；没有就直接为组件装配null即可。
+			2）、如果按照类型找到了多个；参数的名作为id继续匹配;找到就装配；找不到就null；
+			3）、不会报错；
+			
+	自动的为属性赋值：	
+	-->
+	<bean id="person" class="com.atguigu.bean.Person" autowire="byType">
+	</bean>
+	
+	
+	<!-- List<Book> books；容器可以把容器中的所有book封装list赋值给这个属性 -->
+	<bean id="book01" class="com.atguigu.bean.Book">
+		<property name="bookName" value="book1"></property>
+	</bean>
+	<bean id="book02" class="com.atguigu.bean.Book">
+		<property name="bookName" value="book2"></property>
+	</bean>
+	<bean id="book03" class="com.atguigu.bean.Book">
+		<property name="bookName" value="book3"></property>
+	</bean>
+	
+	
+	<!-- 
+	实验14：[SpEL测试I](Spring Expression Language)Spring表达式语言
+		    在SpEL中使用字面量、
+		    引用其他bean、
+		    引用其他bean的某个属性值、
+		   【 调用非静态方法
+		    调用静态方法、】
+		    使用运算符；都支持
+	 -->
+	 <bean id="person04" class="com.atguigu.bean.Person">
+	 	<!-- 字面量：${};   #{} -->
+	 	<property name="salary" value="#{12345.67*12}"></property>
+	 	<!--  引用其他bean的某个属性值、 -->
+	 	<property name="lastName" value="#{book01.bookName}"></property>
+	 	<!--  引用其他bean、 -->
+	 	<property name="car" value="#{car}"></property>
+	 	<!-- 
+		      调用静态方法： UUID.randomUUID().toString();
+		      #{T(全类名).静态方法名(1,2)}
+		     -->
+		 <property name="email" value="#{T(java.util.UUID).randomUUID().toString().substring(0,5)}"></property>
+		 <!--   调用非静态方法;  对象.方法名  -->
+		 <property name="gender" value="#{book01.getBookName()}"></property>
+	 </bean>
+
+
+</beans>

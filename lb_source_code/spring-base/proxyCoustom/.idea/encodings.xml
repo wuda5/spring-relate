@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/design/adapter/classadapter/Client.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/design/adapter/classadapter/IVoltage5V.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/design/adapter/classadapter/VoltageAdapter.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/design/bridge/Client.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/design/bridge/FoldedPhone.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/design/bridge/UpRightPhone.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/design/iterator/College.java" charset="UTF-8" />
+  </component>
+</project>

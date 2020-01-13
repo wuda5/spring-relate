@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="e5854e3f-d8d1-4b66-bae1-d7c2a854c064" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="localRepository" value="E:\Dev_env\java\maven_repository" />
+        <option name="mavenHome" value="E:/Dev_tools/IntelliJ IDEA 2017.3.4/plugins/maven/lib/maven3" />
+        <option name="userSettingsFile" value="E:\Dev_tools\IntelliJ IDEA 2017.3.4\plugins\maven\lib\maven3\conf\settings.xml" />
+      </MavenGeneralSettings>
+    </option>
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="vmOptionsForImporter" value="-Xmx768m" />
+      </MavenImportingSettings>
+    </option>
+  </component>
+  <component name="MavenRunner">
+    <option name="vmOptions" value="-Darchetype=Internal" />
+  </component>
+  <component name="ProjectId" id="1VYOpPQfENyXwl4tmTgrYFHPd2F" />
+  <component name="ProjectViewState">
+    <option name="abbreviatePackageNames" value="true" />
+    <option name="autoscrollFromSource" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="project.structure.last.edited" value="Problems" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="reference.projectsettings.compiler.javacompiler" />
+  </component>
+  <component name="RunManager" selected="JUnit.IOCTest.test10">
+    <configuration name="IOCTest.test09" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="1.SpringIOC_01" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.atguigu.test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.atguigu.test" />
+      <option name="MAIN_CLASS_NAME" value="com.atguigu.test.IOCTest" />
+      <option name="METHOD_NAME" value="test09" />
+      <option name="TEST_OBJECT" value="method" />
+      <option name="PARAMETERS" value="" />
+      <envs>
+        <env name="JAVA_OPTS&#9;" value="-Dfile.encoding=UTF-8" />
+        <env name="JAVA_TOOL_OPTIONS&#9;" value="-Dfile.encoding=UTF-8" />
+      </envs>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="IOCTest.test10" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="1.SpringIOC_01" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.atguigu.test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.atguigu.test" />
+      <option name="MAIN_CLASS_NAME" value="com.atguigu.test.IOCTest" />
+      <option name="METHOD_NAME" value="test10" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="JUnit.IOCTest.test09" />
+      <item itemvalue="JUnit.IOCTest.test10" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.IOCTest.test10" />
+        <item itemvalue="JUnit.IOCTest.test09" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="e5854e3f-d8d1-4b66-bae1-d7c2a854c064" name="Default Changelist" comment="" />
+      <created>1577426743022</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1577426743022</updated>
+      <workItem from="1577426746944" duration="2245000" />
+      <workItem from="1577429232239" duration="610000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="361" y="71" key="#Project_Structure" timestamp="1577427414322">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="361" y="71" key="#Project_Structure/0.0.1536.824/1920.0.1920.1040@0.0.1536.824" timestamp="1577427414322" />
+    <state x="223" y="68" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1577428145709">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="223" y="68" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.824/1920.0.1920.1040@0.0.1536.824" timestamp="1577428145709" />
+    <state x="599" y="123" width="726" height="576" key="#com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryEditorDialog" timestamp="1577427260806">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="599" y="123" width="726" height="576" key="#com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryEditorDialog/0.0.1536.824/1920.0.1920.1040@0.0.1536.824" timestamp="1577427260806" />
+    <state x="570" y="126" width="774" height="586" key="EnvironmentVariablesDialog" timestamp="1577428144609">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="570" y="126" width="774" height="586" key="EnvironmentVariablesDialog/0.0.1536.824/1920.0.1920.1040@0.0.1536.824" timestamp="1577428144609" />
+    <state x="445" y="153" key="FileChooserDialogImpl" timestamp="1577428992293">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="445" y="153" key="FileChooserDialogImpl/0.0.1536.824/1920.0.1920.1040@0.0.1536.824" timestamp="1577428992293" />
+    <state width="1234" height="278" key="GridCell.Tab.0.bottom" timestamp="1577428994880">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1234" height="278" key="GridCell.Tab.0.bottom/0.0.1536.824/1920.0.1920.1040@0.0.1536.824" timestamp="1577428994880" />
+    <state width="1234" height="278" key="GridCell.Tab.0.center" timestamp="1577428994879">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1234" height="278" key="GridCell.Tab.0.center/0.0.1536.824/1920.0.1920.1040@0.0.1536.824" timestamp="1577428994879" />
+    <state width="1234" height="278" key="GridCell.Tab.0.left" timestamp="1577428994879">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1234" height="278" key="GridCell.Tab.0.left/0.0.1536.824/1920.0.1920.1040@0.0.1536.824" timestamp="1577428994879" />
+    <state width="1234" height="278" key="GridCell.Tab.0.right" timestamp="1577428994879">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1234" height="278" key="GridCell.Tab.0.right/0.0.1536.824/1920.0.1920.1040@0.0.1536.824" timestamp="1577428994879" />
+    <state x="408" y="110" key="NewModule_or_Project.wizard" timestamp="1577428944266">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="408" y="110" key="NewModule_or_Project.wizard/0.0.1536.824/1920.0.1920.1040@0.0.1536.824" timestamp="1577428944266" />
+    <state x="249" y="0" key="SettingsEditor" timestamp="1577428455069">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="249" y="0" key="SettingsEditor/0.0.1536.824/1920.0.1920.1040@0.0.1536.824" timestamp="1577428455069" />
+  </component>
+</project>

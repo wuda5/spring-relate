@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="lubanSpring:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>lubanSpring</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="lubanSpring.war">
+      <element id="artifact" artifact-name="lubanSpring:war exploded" />
+    </root>
+  </artifact>
+</component>
