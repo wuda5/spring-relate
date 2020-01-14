@@ -566,7 +566,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				 * 注册beanPostProcessor--将内部的那几个和 自定义的beanPostProcessor 都从bdf 完成bean 的生命了（调用了 getbean 了）后再将其processor 加入工厂的processor 集合里，但是由于他是后才加入工厂的processor 集合里，
 				 * 所以，自定义的那些中的扩展再bean的precessor的init前后2方法是还没执行到的，应该是后面还要执行一次吧！
 				 *
-				 * --结论：【2.】可以看出spring 这里面也会实例化完整bean，不过它是实例化第 2 类bean 是 BeanPostProcessors 的【后置处理器】们，其余的下面
+				 * --结论：【2.!】可以看出spring 这里面也会实例化完整bean，不过它是实例化第 2 类bean 是 BeanPostProcessors 的【后置处理器】们，其余的下面
 				 * */
 				registerBeanPostProcessors(beanFactory);
 
@@ -585,7 +585,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 				// Instantiate all remaining (non-lazy-init) singletons.--（除了前面的自定义processor已经在x 完成了一次生命周期了）
 				/**--结论：【3.】可以看出spring 这里面会实例化所有普通 + 完整bean，这个时候实例他们也是妙啊!--因为经过前面两部分的实例化操作
-				 * 
+				 *
 				 * 就已经将 【工厂后置处理器】 BeanFactoryPostProcessor 和  BeanPostProcessors【普通的后置处理器】 全部提前实例化 好了的！，
 				 * 这里实例化普通的 bean 过程就能保证他们都会被那些spring 内部的后置处理器们和 自己实现的那些后置处理器们 都可以作用到
 				 * 每一个符合要求的bean上面了，
