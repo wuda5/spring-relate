@@ -177,7 +177,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 */
 	@Nullable
 	protected Object getSingleton(String beanName, boolean allowEarlyReference) {
-		//从map中获取bean如果不为空直接返回，不再进行初始化工作
+		//从map中获取bean如果不为空直接返回，不再进行初始化工作--因为如果是执行到finishBeanFactoryInitialization(beanFactory);调用到这里的化，那些内部的及所有自定义的后置处理器，都已经被在之前加入单例池实现了生命了，所以不会为空的！
 		//讲道理一个程序员提供的对象这里一般都是为空的
 		Object singletonObject = this.singletonObjects.get(beanName);
 		if (singletonObject == null && isSingletonCurrentlyInCreation(beanName)) {
@@ -255,7 +255,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 					afterSingletonCreation(beanName);
 				}
 				if (newSingleton) {
-					addSingleton(beanName, singletonObject);
+					addSingleton(beanName, singletonObject);/**这一步是最最要，bd放入bdMap是之前就好了，这里是将bean 放入 单例池完成了bean 生命**/
 				}
 			}
 			return singletonObject;

@@ -77,6 +77,11 @@ class ApplicationContextAwareProcessor implements BeanPostProcessor {
 	public ApplicationContextAwareProcessor(ConfigurableApplicationContext applicationContext) {
 		this.applicationContext = applicationContext;
 		this.embeddedValueResolver = new EmbeddedValueResolver(applicationContext.getBeanFactory());
+		// --自己加一个打印--是在prepareBeanFactory 中执行	beanFactory.addBeanPostProcessor(new ApplicationContextAwareProcessor(this));调用到这构造的，
+		//而并不需要也灭有 在 bdMap中注册！！！
+		// 能够在bean中获得到各种*Aware（*Aware都有其作用）---重要！，但不是注册xx!!
+		System.out.println(" ******** [0.] 内部的 ApplicationContextAwareProcessor（但它还并没有注册bd!!？后面会？） 实现了-->BeanPostProcessor 的后置处理器， 构造器方法 ********** ");
+		System.out.println(" ApplicationContextAwareProcessor 的构造是在prepareBeanFactory 中执行\tbeanFactory.addBeanPostProcessor(new ApplicationContextAwareProcessor(this));调用到这构造的，");
 	}
 
 

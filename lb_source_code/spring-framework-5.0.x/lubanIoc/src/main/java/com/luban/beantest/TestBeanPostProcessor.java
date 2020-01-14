@@ -32,6 +32,10 @@ public class TestBeanPostProcessor implements BeanPostProcessor{
 		this.plistprop = plistprop;
 	}
 
+	public TestBeanPostProcessor() {
+		System.out.println("+++++++++ [3.] TestBeanPostProcessor 实现了 -->BeanPostProcessor 【自定义】后置处理器, 构造方法  +++++++++");
+	}
+
 	@Override
 	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
 		/**这里高能--可以看到这里可以拿到bean!!,*/

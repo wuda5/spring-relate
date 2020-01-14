@@ -7,7 +7,7 @@ import javax.annotation.PostConstruct;
 public class testwu {
 	public testwu(){
 
-		System.out.println("wu-init");
+		System.out.println("wu-init--普通类的构造器");
 	}
 
 	public void query(){

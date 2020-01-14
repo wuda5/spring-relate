@@ -250,14 +250,14 @@ final class PostProcessorRegistrationDelegate {
 	public static void registerBeanPostProcessors(
 			ConfigurableListableBeanFactory beanFactory, AbstractApplicationContext applicationContext) {
 
-		//从beanDefinitionMap中得到所有的 BeanPostProcessor,包含自己定义的 testBeanPostProcessor
+		//从beanDefinitionMap中得到所有的 BeanPostProcessor,包含自己定义的 testBeanPostProcessor,其中有俩个内置的 internalAutowiredAnnotationProcessor（重要！），internalRequiredAnnotationProcessor
 		String[] postProcessorNames = beanFactory.getBeanNamesForType(BeanPostProcessor.class, true, false);
 
 		// Register BeanPostProcessorChecker that logs an info message when
 		// a bean is created during BeanPostProcessor instantiation, i.e. when
 		// a bean is not eligible for getting processed by all BeanPostProcessors.
 		int beanProcessorTargetCount = beanFactory.getBeanPostProcessorCount() + 1 + postProcessorNames.length;
-		beanFactory.addBeanPostProcessor(new BeanPostProcessorChecker(beanFactory, beanProcessorTargetCount));
+		beanFactory.addBeanPostProcessor(new BeanPostProcessorChecker(beanFactory, beanProcessorTargetCount));/**这一步会：this.beanPostProcessors.add(beanPostProcessor);*/
 
 		// Separate between BeanPostProcessors that implement PriorityOrdered,
 		// Ordered, and the rest.
@@ -267,7 +267,8 @@ final class PostProcessorRegistrationDelegate {
 		List<String> nonOrderedPostProcessorNames = new ArrayList<>();
 		for (String ppName : postProcessorNames) {
 			if (beanFactory.isTypeMatch(ppName, PriorityOrdered.class)) {
-				BeanPostProcessor pp = beanFactory.getBean(ppName, BeanPostProcessor.class);/**注意这个方法：会执行其他的bean的实例化和xxx完成xxx*/
+				/**注意这个方法：会执行其他的bean的实例化和xxx完成xxx*/
+				BeanPostProcessor pp = beanFactory.getBean(ppName, BeanPostProcessor.class);
 				priorityOrderedPostProcessors.add(pp);
 				if (pp instanceof MergedBeanDefinitionPostProcessor) {
 					internalPostProcessors.add(pp);
@@ -276,18 +277,26 @@ final class PostProcessorRegistrationDelegate {
 			else if (beanFactory.isTypeMatch(ppName, Ordered.class)) {
 				orderedPostProcessorNames.add(ppName);
 			}
-			else {/**自己定义的 testBeanPostProcessor 会在这里执行 放入一个nonOrderedPostProcessorNames 集合中的，而不是上面第一个if中内部dbf执行并会完成bean，即说明内部的那些xx是优先保证执行完成后，才会执行自定义的xxx, 它是在下面的 registerBeanPostProcessors(beanFactory, nonOrderedPostProcessors);中将次processor给工厂上的，但也是先在for循环所有的 自定义prossor执行 beanFactory.getBean 完成此processor的bean生命,后才执行的*/
+			else {
+			/**自己定义的且没实现PriorityOrdered或Ordered接口的， testBeanPostProcessor 会在这里执行 放入一个nonOrderedPostProcessorNames 集合中的，
+			 * 注意和上面区别：上面马上就实例化了！！？这是考虑优先级问题吧--接口：PriorityOrdered ，Ordered
+			 而不是上面第一个if中内部dbf执行并会完成bean，即说明内部的那些xx是优先保证执行完成后，才会执行自定义的xxx,
+			 它是在下面的 registerBeanPostProcessors(beanFactory, nonOrderedPostProcessors);中将次processor给工厂上的，
+			 但也是先在for循环所有的 自定义prossor执行 beanFactory.getBean 完成此processor的bean生命,后才执行的
+			 */
 				nonOrderedPostProcessorNames.add(ppName);
 			}
 		}
 		priorityOrderedPostProcessors.remove(1);
 		// First, register the BeanPostProcessors that implement PriorityOrdered.
 		sortPostProcessors(priorityOrderedPostProcessors, beanFactory);
+		/**beanFactory.addBeanPostProcessor(postProcessor);*/
 		registerBeanPostProcessors(beanFactory, priorityOrderedPostProcessors);
 
 		// Next, register the BeanPostProcessors that implement Ordered.
 		List<BeanPostProcessor> orderedPostProcessors = new ArrayList<>();
 		for (String ppName : orderedPostProcessorNames) {
+			/**注意这个方法：会执行其他的bean的实例化和xxx完成xxx*/
 			BeanPostProcessor pp = beanFactory.getBean(ppName, BeanPostProcessor.class);
 			orderedPostProcessors.add(pp);
 			if (pp instanceof MergedBeanDefinitionPostProcessor) {
@@ -300,7 +309,10 @@ final class PostProcessorRegistrationDelegate {
 		// Now, register all regular BeanPostProcessors.
 		List<BeanPostProcessor> nonOrderedPostProcessors = new ArrayList<>();
 		for (String ppName : nonOrderedPostProcessorNames) {
-			BeanPostProcessor pp = beanFactory.getBean(ppName, BeanPostProcessor.class);// 这一行关键：将自己定义的processor 完成 其bean的生命周期了，后下面才将xx交给工厂的proscessor集合上面！，所以由于在完成bean的创建过程时，bean工厂的processors集合中还没有此processor，即此时也就还没有法执行到自定义prossor中的扩展方法，还是在后面完成的？
+			/**这一行关键：将自己定义的processor 完成 其bean的生命周期了，后下面才将xx交给工厂的proscessor集合上面！，
+			 * 所以由于在完成bean的创建过程时，bean工厂的processors集合中还没有此processor，即此时也就还没有法执行到自定义prossor中的扩展方法，还是在后面完成的？
+			*/
+			BeanPostProcessor pp = beanFactory.getBean(ppName, BeanPostProcessor.class);
 			nonOrderedPostProcessors.add(pp);
 			if (pp instanceof MergedBeanDefinitionPostProcessor) {
 				internalPostProcessors.add(pp);

@@ -10,8 +10,12 @@ import org.springframework.context.annotation.*;
 @Configuration
 
 public class Appconfig {
+	public Appconfig() {
+		System.out.println("+++++++ [4.] Appconfig 特殊的配置类@Configuration（用包扫描）的构造器 ++++++");
+	}
 
-//	@Bean
+
+	//	@Bean
 //	public IndexDao1 indexDao1(){
 //
 //		return new IndexDao1();

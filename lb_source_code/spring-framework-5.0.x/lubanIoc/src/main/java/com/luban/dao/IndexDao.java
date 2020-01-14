@@ -15,6 +15,10 @@ public class IndexDao implements Dao, Serializable, FactoryBean {
 
     private List<String> listProp;
 
+	public IndexDao() {
+		System.out.println("+++++++++++[5.] IndexDao 实现了 --> FactoryBean 的 构造方法  +++++++++");
+	}
+
 	/**
 	 * 取钱
 	 */

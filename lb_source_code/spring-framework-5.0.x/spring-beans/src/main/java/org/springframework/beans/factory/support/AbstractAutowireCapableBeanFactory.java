@@ -503,7 +503,12 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		try {
-			// 调用doCreateBean 创建bean
+			/**调用doCreateBean 创建bean（完成三个步骤：--但是
+			 * 1.createBeanInstance反射构造器实例化对象
+			 * 2.populateBean 属性设置（其中也有要被实现了后置处理器接口 InstantiationAwareBeanPostProcessor 的方法 ibp.postProcessAfterInstantiation(bean, beanName)，即专门处理bean被实例化之后）
+			 * 3.initializeBean初始化（这里的初始又可以分为三步骤：1）.执行init前 2）.init 3）.init后，2）.3）都是针对的仅就 BeanPostProcessor，不要属性设置 是InstantiationAwareBeanPostProcessor（它是BeanPostProcessor的子接口）
+			 * init的 前 主要是对所有的BeanPostProcessor 执行 processor.postProcessBeforeInitialization(result, beanName);
+			 * init的 后 主要是对所有的BeanPostProcessor 执行 processor.postProcessAfterInitialization(result, beanName);）*/
 			Object beanInstance = doCreateBean(beanName, mbdToUse, args);
 			if (logger.isDebugEnabled()) {
 				logger.debug("Finished creating instance of bean '" + beanName + "'");
@@ -544,7 +549,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			instanceWrapper = this.factoryBeanInstanceCache.remove(beanName);
 		}
 		if (instanceWrapper == null) {
-			/**
+			/**一：实例化
 			 * 创建 bean 实例：instanceWrapper ，并将实例包裹在 BeanWrapper 实现类对象中返回。
 			 * createBeanInstance中包含三种创建 bean 实例的方式：
 			 *   1. 通过工厂方法创建 bean 实例
@@ -591,9 +596,9 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		// Initialize the bean instance.
 		Object exposedObject = bean;
 		try {
-			//设置属性，（都还没实例化？实例了在前面执行了instanceWrapper = createBeanInstance(beanName, mbd, args);）（这里也有用到后置处理器，只是它好像是针对那些实现了InstantiationAwareBeanPostProcessor 的那些自定义的 aware 在这个过程进行扩展可干预！可以叫在init前，设置属性的前后xx的处理器 ）非常重要，instanceWrapper就是上面通过createBeanInstance(beanName, mbd, args);构造反射（相当于执行了构造器方法?）的实例对象后到这里进行属性注入？
+			//二.设置属性，（实例化位置？实例了在前面执行了instanceWrapper = createBeanInstance(beanName, mbd, args);）（这里也有用到后置处理器，只是它好像是针对那些实现了InstantiationAwareBeanPostProcessor 的那些自定义的 aware 在这个过程进行扩展可干预！可以叫在init前，设置属性的前后xx的处理器 ）非常重要，instanceWrapper就是上面通过createBeanInstance(beanName, mbd, args);构造反射（相当于执行了构造器方法?）的实例对象后到这里进行属性注入？
 			populateBean(beanName, mbd, instanceWrapper);
-			//执行初始化init,利用后置处理器，aop就是在这里完成的处理---分为了三大步！！（
+			//三.执行初始化init,利用后置处理器，aop就是在这里完成的处理---分为了三大步！！（
 			// 1.init-before applyBeanPostProcessorsBeforeInitialization(wrappedBean, beanName);）
 			//2.init即invokeInitMethods(beanName, wrappedBean, mbd);
 			//3.init-after即 applyBeanPostProcessorsAfterInitialization(wrappedBean, beanName);
@@ -1172,7 +1177,10 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		// No special handling: simply use no-arg constructor.
-		//使用默认的无参构造方法进行初始化--好像只是实例话个对象
+		/**使用默认的无参构造方法进行初始化--好像只是实例话个对象---
+		*第一次被调用此方法时，beanName是ConfigurationClassPostProcessor（内部极其重要的工厂后置处理器，
+		 * 分析可以看出，此类 是spring 中第一个被实例化出来的）
+		*/
 		return instantiateBean(beanName, mbd);
 	}
 

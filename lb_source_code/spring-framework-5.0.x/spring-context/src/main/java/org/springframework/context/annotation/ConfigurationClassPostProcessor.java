@@ -131,7 +131,10 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 			return beanClassName;
 		}
 	};
-
+    /**invokeBeanFactoryPostProcessors(beanFactory);中执行*/
+	public ConfigurationClassPostProcessor() {
+		System.out.println("***** [A.1.two]非常重要！ **** 内部的 ConfigurationClassPostProcessor-->BeanFactoryPostProcessor 的 构造器方法 ********** 自己加的");
+	}
 
 	@Override
 	public int getOrder() {

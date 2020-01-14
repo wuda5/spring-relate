@@ -155,7 +155,7 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 */
 	public AnnotationConfigApplicationContext(Class<?>... annotatedClasses) {
 		/**
-		 * 		annotatedClasses  appconfig.class
+		 * 		annotatedClasses  appconfig.class, 其中的属性 reader 会 注册了默认可能7个 bdf到bdfMap(但一个也灭有实例化)，由类似下面 register的作用
 		 * 		this();这里由于他有父类GenericApplicationContext，故而会先调用父类的构造方法(注意：直接点击过去是本类的，看不到父类的小心，)，然后才会调用自己的构造方法
 		 * 		1.先调用父类构造
 		 * 		public GenericApplicationContext() {
@@ -169,8 +169,8 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 		 * */
 		this();
 		// register 方法也是 父接口AnnotationConfigRegistry的方法
-		/**这里就是要注册 自己定义的那些 beandef 到上下文上
-		 * 这步执行完后，即说明spring对要实例化的哪些bean已经准备就绪（原料好了），下面一步，refresh才是真的开始实例话bean
+		/**这里就是要注册 自己定义的那些 beandef 到上下文上，如果一般采用的一步到位的话，这里的就是注册appconfig配置类的 bd 到bdmap
+		 * 这步执行完后，refresh才是真的开始 做实例话bean
 		 * */
 		register(annotatedClasses);
 		refresh();

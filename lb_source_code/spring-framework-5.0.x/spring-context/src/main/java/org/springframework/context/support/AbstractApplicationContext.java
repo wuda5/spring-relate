@@ -174,7 +174,13 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	@Nullable
 	private ConfigurableEnvironment environment;
 
-	/** BeanFactoryPostProcessors to apply on refresh */
+	/** BeanFactoryPostProcessors to apply on refresh
+	 * 这个工厂后置处理器的集合定义不在bean工厂里，原因是考虑外面这样调用：oc.addBeanFactoryPostProcessor(new TestBeanFactoryPostProcessorWhereNoComponent());
+	 * 且此TestBeanFactoryPostProcessorWhereNoComponent 并没有加组件注解@component其实它就不会给注册成bd,无bean生命,而如果采用另一种使用方式的话，
+	 * 会注册到bd里面的，完成bean生命，且，对应维护的 beanFactoryPostProcessors 是在 bean工厂里DefaultLisableBeanFactory 的,
+	 * 即看出，对于这工厂后置处理器，spring是做了两套分别适配的，和 在reader中那个 包扫描器，类似，对比来，感觉多处采用此策略吧！！！！
+	 *
+	 * */
 	private final List<BeanFactoryPostProcessor> beanFactoryPostProcessors = new ArrayList<>();
 
 	/** System time in milliseconds when this context started */
@@ -528,7 +534,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 			// Prepare the bean factory for use in this context.
 			//准备工厂--这里很重要！！--前面那最初的7 个bean 的作用体现--我没看到呢？--beanPostProcess（beanFactory中的重要属性集合），
-			/**有两个spirng默认beanPostProcess是啥时候加入工厂中的,其中beanFactory.addBeanPostProcessor(new ApplicationContextAwareProcessor(this));--非常核心！！，
+			/**有两个spirng默认beanPostProcess 后置处理器 加入工厂的所维护的一个list<>中的，但不是注册bd,注意区分,其中beanFactory.addBeanPostProcessor(new ApplicationContextAwareProcessor(this));--非常核心！！，
 			 *  加入它的作用在下面第二步：invokeBeanFactoryPostProcessors(beanFactory);中处理可以看到
 			 *  那自己实现beanpostProcessor是在那里加入工厂？？*/
 			prepareBeanFactory(beanFactory);
@@ -547,15 +553,21 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				 * 这里会和上面prepareBeanFactory(beanFactory);中加入的beanPostProssor有关系
 				 * 从方法名字就可以看出，invoke执行的是实现BeanFactoryPostProcessor接口的xxx集合，主要是ConfigurationClassPostProcessor作用？
 				 * 这一步，会有getbean即创建bean放入singtonMap，后populate属性，在执行后置处理器（如init前后）一系列操作
-				 * （但是这个都是只针对实现了 BeanFactoryPostProcessor 接口的那些
+				 * （但是这个都是只针对实现了 BeanFactoryPostProcessor(bean工厂后置处理器) 接口的那些
 				 * 包括那个 非常重要 的ConfigurationClassPostProcessor 类,和 自己定义 的那些实现了 BeanFactoryPostProcessor 的扩展他们实现了生命周期放入了 单例池！！，
 				 * 其余的完成的最重要的就是 对扫描的bean 他们
 				 * 的 bdf 放入工厂 bdfMap ,即 其余bean 都还没实例化等操作仅生产了bdf,下面的才会）
+				 *
+				 * --结论：【1.】可以看出spring 最先实例化的第一类bean 是 BeanFactoryPostProcessor 的【工厂后置处理器】们，其余的下面
 				 * */
 				invokeBeanFactoryPostProcessors(beanFactory);
 
-				// Register bean processors that intercept bean creation.
-				//注册beanPostProcessor--将内部的那几个和 自定义的beanPostProcessor 都从bdf 完成bean 的生命了（调用了 getbean 了）后再将其processor 加入工厂的processor 集合里，但是由于他是后才加入工厂的processor 集合里，所以，自定义的那些中的扩展再bean的precessor的init前后2方法是还没执行到的，应该是后面还要执行一次吧！
+				/*** Register bean processors that intercept bean creation.（因为前面一步invokeBeanFactoryPostProcessors 做完了扫描了有了bdfs了,下面是先进行了【2.】后置处理器们的 实例化等）
+				 * 注册beanPostProcessor--将内部的那几个和 自定义的beanPostProcessor 都从bdf 完成bean 的生命了（调用了 getbean 了）后再将其processor 加入工厂的processor 集合里，但是由于他是后才加入工厂的processor 集合里，
+				 * 所以，自定义的那些中的扩展再bean的precessor的init前后2方法是还没执行到的，应该是后面还要执行一次吧！
+				 *
+				 * --结论：【2.】可以看出spring 这里面也会实例化完整bean，不过它是实例化第 2 类bean 是 BeanPostProcessors 的【后置处理器】们，其余的下面
+				 * */
 				registerBeanPostProcessors(beanFactory);
 
 				// Initialize message source for this context.--暂时可以不关注
@@ -572,6 +584,29 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				registerListeners();
 
 				// Instantiate all remaining (non-lazy-init) singletons.--（除了前面的自定义processor已经在x 完成了一次生命周期了）
+				/**--结论：【3.】可以看出spring 这里面会实例化所有普通 + 完整bean，这个时候实例他们也是妙啊!--因为经过前面两部分的实例化操作
+				 * 
+				 * 就已经将 【工厂后置处理器】 BeanFactoryPostProcessor 和  BeanPostProcessors【普通的后置处理器】 全部提前实例化 好了的！，
+				 * 这里实例化普通的 bean 过程就能保证他们都会被那些spring 内部的后置处理器们和 自己实现的那些后置处理器们 都可以作用到
+				 * 每一个符合要求的bean上面了，
+				 *
+				 * 注意：1.spring 的一个扩展点 实现 FactoryBean 的接口的那些bean 的实例化 应该也才是在这里完成生命周期哦 ！
+				 *       2.spring 的配置类 appconfig 也是在这里和 普通bean 一样 完成生命周期的，只是它先于普通的而已!!
+				 *       3.这里进去再实例化bean时，是先拿到所有的  List<String> beanDefinitionNames 的bdfName,后循环对通过每个 bdName 去实例化，
+				 *       这个过程 会有先判断 bdName 所对应的bean 是否之前就被实例化了（那些之前被已经实例化过的 后置处理器们），这样就会保证不会重复实例化他们
+				 *
+				 *       4.综上：可以分析处，bean 的实例化 如果按类型不同看世界先后的化是-->BeanFactoryPostProcessor中的内置和外置的顺序可由外置的是哪种方式（注解或不交给spring）有区别的
+				 *       【1.BeanFactoryPostProcessor 的工厂后置处理器】 -->【2.BeanPostProcessor 的后置处理器，一般先内后外的】
+				 *   --> 【3.其他bean】,其中对这里可以简单又是分为几类如下：
+								 *        【3.1. Appconfig 特殊的配置类】
+								 *        【3.2. 实现 FactoryBean 的工厂bean】
+								 *        【3.2. 普通bean】
+				 *
+				 * 自己的理解为啥他和其他的spring 所提供的扩展带点被实例时机如此靠后？
+				 * --因为它相当是一个特殊 的 普通bean（&） ，且它不是属于 后置处理器（spring的后置处理器可以 暴露spring 相关bean 甚至容器工厂等，进行任意妄为），
+				 * 而 实现 FactoryBean 接口，他也只能提供返回 想拿的自己设的对象,最关键的一点就是，spring 在接口的方法上参数 没有暴露 任何 的有关 spring 相关的 参数！！
+				 * 都是给的空的参数即无任何参数的方法，也就没有办法去影响 spring 的其他bean或工厂等等，所以它在这里搞！！！
+				 * */
 				finishBeanFactoryInitialization(beanFactory);
 
 				// Last step: publish corresponding event.
@@ -654,7 +689,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	}
 
 	/**
-	 *--向bean 工厂加了很多的BeanPostProcessor（不是bdf），还直接注册了三个registerSingleton
+	 *--向bean 工厂加了很多的BeanPostProcessor 后置处理器（不是bdf，并没有注册注意），还直接注册了三个和环境相关的 registerSingleton
 	 * 配置其标准的特征，比如上下文的加载器ClassLoader和post-processors回调
 	 * Configure the factory's standard context characteristics,
 	 * such as the context's ClassLoader and post-processors.
@@ -672,7 +707,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		// Configure the bean factory with context callbacks.--最核心的代码！！
 		//添加一个后置管理器
 		//ApplicationContextAwareProcessor
-		// 能够在bean中获得到各种*Aware（*Aware都有其作用）---重要！
+		// 能够在bean中获得到各种*Aware（*Aware都有其作用）---重要！，但不是注册xx!!
 		beanFactory.addBeanPostProcessor(new ApplicationContextAwareProcessor(this));
 
 		beanFactory.ignoreDependencyInterface(EnvironmentAware.class);

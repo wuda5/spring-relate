@@ -1,7 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d8323e10-f1b2-42c7-8702-60eff5d1ac6b" name="Default Changelist" comment="" />
+    <list default="true" id="d8323e10-f1b2-42c7-8702-60eff5d1ac6b" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../../../spring-framework-5.0.x/lubanIoc/src/main/java/com/luban/beantest/TestBeanFactoryPostProcessorWhereNoComponent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../spring-framework-5.0.x/lubanIoc/src/main/java/com/luban/app/Appconfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../spring-framework-5.0.x/lubanIoc/src/main/java/com/luban/app/Appconfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../spring-framework-5.0.x/lubanIoc/src/main/java/com/luban/beantest/TestBeanPostProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../spring-framework-5.0.x/lubanIoc/src/main/java/com/luban/beantest/TestBeanPostProcessor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../spring-framework-5.0.x/lubanIoc/src/main/java/com/luban/dao/IndexDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../spring-framework-5.0.x/lubanIoc/src/main/java/com/luban/dao/IndexDao.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../spring-framework-5.0.x/lubanIoc/src/main/java/com/luban/dao/testwu.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../spring-framework-5.0.x/lubanIoc/src/main/java/com/luban/dao/testwu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../spring-framework-5.0.x/lubanIoc/src/main/java/com/luban/test/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../spring-framework-5.0.x/lubanIoc/src/main/java/com/luban/test/Test.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../spring-framework-5.0.x/spring-beans/src/main/java/org/springframework/beans/factory/support/AbstractAutowireCapableBeanFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../spring-framework-5.0.x/spring-beans/src/main/java/org/springframework/beans/factory/support/AbstractAutowireCapableBeanFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../spring-framework-5.0.x/spring-beans/src/main/java/org/springframework/beans/factory/support/AbstractBeanFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../spring-framework-5.0.x/spring-beans/src/main/java/org/springframework/beans/factory/support/AbstractBeanFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../spring-framework-5.0.x/spring-beans/src/main/java/org/springframework/beans/factory/support/DefaultSingletonBeanRegistry.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../spring-framework-5.0.x/spring-beans/src/main/java/org/springframework/beans/factory/support/DefaultSingletonBeanRegistry.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../spring-framework-5.0.x/spring-cglib1/src/main/java/com/luban/app/Appconfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../spring-framework-5.0.x/spring-cglib1/src/main/java/com/luban/app/Appconfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../spring-framework-5.0.x/spring-context/src/main/java/org/springframework/context/annotation/AnnotationConfigApplicationContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../spring-framework-5.0.x/spring-context/src/main/java/org/springframework/context/annotation/AnnotationConfigApplicationContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../spring-framework-5.0.x/spring-context/src/main/java/org/springframework/context/annotation/ConfigurationClassPostProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../spring-framework-5.0.x/spring-context/src/main/java/org/springframework/context/annotation/ConfigurationClassPostProcessor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../spring-framework-5.0.x/spring-context/src/main/java/org/springframework/context/support/AbstractApplicationContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../spring-framework-5.0.x/spring-context/src/main/java/org/springframework/context/support/AbstractApplicationContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../spring-framework-5.0.x/spring-context/src/main/java/org/springframework/context/support/ApplicationContextAwareProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../spring-framework-5.0.x/spring-context/src/main/java/org/springframework/context/support/ApplicationContextAwareProcessor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../spring-framework-5.0.x/spring-context/src/main/java/org/springframework/context/support/PostProcessorRegistrationDelegate.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../spring-framework-5.0.x/spring-context/src/main/java/org/springframework/context/support/PostProcessorRegistrationDelegate.java" afterDir="false" />
+    </list>
     <ignored path="$PROJECT_DIR$/classes/" />
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -107,6 +124,9 @@
       </file>
     </leaf>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../../.." />
+  </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
@@ -149,6 +169,7 @@
     <option name="width" value="1938" />
     <option name="height" value="1048" />
   </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
@@ -170,6 +191,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../spring-framework-5.0.x" />
