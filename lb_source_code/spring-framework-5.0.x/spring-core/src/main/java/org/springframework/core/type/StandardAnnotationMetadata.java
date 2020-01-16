@@ -44,6 +44,12 @@ public class StandardAnnotationMetadata extends StandardClassMetadata implements
 
 	private final boolean nestedAnnotationsAsMap;
 
+	/**
+	 * 卧槽，这是我自己提供的，它本身没有这个方法的
+	 * */
+	public Annotation[] getAnnotations() {
+		return annotations;
+	}
 
 	/**
 	 * Create a new {@code StandardAnnotationMetadata} wrapper for the given Class.

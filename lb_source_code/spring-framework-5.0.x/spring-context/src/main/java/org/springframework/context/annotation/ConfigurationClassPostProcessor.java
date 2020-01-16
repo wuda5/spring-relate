@@ -234,7 +234,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 					"postProcessBeanFactory already called on this post-processor against " + registry);
 		}
 		this.registriesPostProcessed.add(registryId);
-
+        /**这里面的 	this.reader.loadBeanDefinitions(configClasses); 就是来处理注册特殊@import @bean xml的情况的bean的注册的！！，parser.parse(candidates);是有解析bean注册普通bd*/
 		processConfigBeanDefinitions(registry);
 	}
 
@@ -261,7 +261,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		beanFactory.addBeanPostProcessor(new ImportAwareBeanPostProcessor(beanFactory));
 	}
 
-	/**--会扫描配置类的注解com.luban，生成resouces集合后，生成parser解析器解析当个满足要求的bean上面的信息，后注册bdf放入dbfMap到工厂
+	/**--会扫描配置类的注解com.luban，生成resouces集合后，生成parser解析器解析当个满足要求的bean上面的信息，后注册bdf放入dbfMap到工厂--其实也有处理特殊bean如@imprt中的也会被注册为bd--this.reader.loadBeanDefinitions(configClasses);
 	 * Build and validate a configuration model based on the registry of
 	 * {@link Configuration} classes.
 	 */
@@ -346,15 +346,15 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		Set<BeanDefinitionHolder> candidates = new LinkedHashSet<>(configCandidates);
 		Set<ConfigurationClass> alreadyParsed = new HashSet<>(configCandidates.size());
 		do {
-			/**重要：！！完成其他bean的扫描！*/
+			/**重要：！！完成其他bean的扫描和bd注册，但注意：只是注册一般的bd到bdMap,特殊的如@import @bean xml的下面this.reader.loadBeanDefinitions(configClasses);才注册？！*/
 			parser.parse(candidates);
 			parser.validate();
-			//map.keyset
+			//map.keyset--注意看下面方法this.reader.loadBeanDefinitions(configClasses); 的解释
 			Set<ConfigurationClass> configClasses = new LinkedHashSet<>(parser.getConfigurationClasses());
 			configClasses.removeAll(alreadyParsed);
 
 			// Read the model and create bean definitions based on its content
-			if (this.reader == null) {
+			if (this.reader == null) {/**那些特殊的(用得到？上面完成的xxx)如import的在这里生成bd对象，后再后面放入bdMap*/
 				this.reader = new ConfigurationClassBeanDefinitionReader(
 						registry, this.sourceExtractor, this.resourceLoader, this.environment,
 						this.importBeanNameGenerator, parser.getImportRegistry());
@@ -368,7 +368,8 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 			 * 因为ImportBeanDefinitionRegistrar在扫描出来的时候已经被添加到一个list当中去了
 			 */
 
-			//bd 到 map 除却普通
+			//bd 到 map 除却普通--如那些被@import 所导入经过反射生成的bd如：IndexDao3---这里相当于是对这一类特殊bd 在这里单独注册到dbMap,且注意：传的是一个集合configClasses，即是一次性完成判断特殊的xx注册bd的，
+			// 而普通的在 上面parser.parse(candidates);过程就会被完成bd注册--configClasses的来源很曲折--是上面的先parser.parse(candidates);后 内部会给此parser里configurationClasses 属性不断加bean的信息(其他的也会加，只是那些在下面方法中不起作用)，后parser.getConfigurationClasses() 得到这些后在这里使用注册那些里面含了特殊 bean的bd
 			this.reader.loadBeanDefinitions(configClasses);
 			alreadyParsed.addAll(configClasses);
 
@@ -384,6 +385,9 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 				}
 				for (String candidateName : newCandidateNames) {
 					if (!oldCandidateNames.contains(candidateName)) {
+						/**这里才是在注册 BeanFacotryPostProcessor 工长后置处理器(自己实现的并且是加了@compnent的),和 普通的 BeanPostProcessors 后置处理器
+						 * 还有 FactoryBean+ 普通的bean 如Test5
+						 * 为啥在都这呢?这里不是注册，是获取刚刚被注册的bd构建处bdh，加入candidates返回上一级*/
 						BeanDefinition bd = registry.getBeanDefinition(candidateName);
 						if (ConfigurationClassUtils.checkConfigurationClassCandidate(bd, this.metadataReaderFactory) &&
 								!alreadyParsedClasses.contains(bd.getBeanClassName())) {

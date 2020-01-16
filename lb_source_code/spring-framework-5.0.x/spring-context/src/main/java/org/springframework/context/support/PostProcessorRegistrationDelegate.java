@@ -351,7 +351,7 @@ final class PostProcessorRegistrationDelegate {
 			Collection<? extends BeanDefinitionRegistryPostProcessor> postProcessors, BeanDefinitionRegistry registry) {
 
 		//因为只有一条数据--第一次执行fresh的话，postProcessor是内部注册的bean经过currentRegistryProcessors.add(beanFactory.getBean()后创造的实际存在spring可以用的bean（ConfigurationClassPostProcessor）
-		//下面这个很关键的方法就是ConfigurationClassPostProcessor中执行的
+		//下面这个很关键的方法就是ConfigurationClassPostProcessor中执行的 --processConfigBeanDefinitions(registry);中的this.reader.loadBeanDefinitions(configClasses); 就是来处理注册特殊@import @bean xml的情况的bean的注册的,parser.parse(candidates);是有解析bean注册普通bd
 		for (BeanDefinitionRegistryPostProcessor postProcessor : postProcessors) {
 			postProcessor.postProcessBeanDefinitionRegistry(registry);//BeanDefinitionRegistryPostProcessor是接口 -第一次执行fresh的话就会到 ConfigurationClassPostProcessor中执行
 		}

@@ -33,14 +33,16 @@ import java.util.Set;
  */
 public interface AnnotationMetadata extends ClassMetadata, AnnotatedTypeMetadata {
 
+
 	/**
+	 * //拿到当前类上所有的注解的全类名（注意是全类名）
 	 * Get the fully qualified class names of all annotation types that
 	 * are <em>present</em> on the underlying class.
 	 * @return the annotation type names
 	 */
 	Set<String> getAnnotationTypes();
 
-	/**
+	/** annotationName:注解类型的全类名
 	 * Get the fully qualified class names of all meta-annotation types that
 	 * are <em>present</em> on the given annotation type on the underlying class.
 	 * @param annotationName the fully qualified class name of the meta-annotation
@@ -50,6 +52,7 @@ public interface AnnotationMetadata extends ClassMetadata, AnnotatedTypeMetadata
 	Set<String> getMetaAnnotationTypes(String annotationName);
 
 	/**
+	 * // 是否包含指定注解 （annotationName：全类名）
 	 * Determine whether an annotation of the given type is <em>present</em> on
 	 * the underlying class.
 	 * @param annotationName the fully qualified class name of the annotation
@@ -59,6 +62,9 @@ public interface AnnotationMetadata extends ClassMetadata, AnnotatedTypeMetadata
 	boolean hasAnnotation(String annotationName);
 
 	/**
+	 * 	 * 	//这个厉害了，用于判断注解类型自己是否被某个元注解类型所标注
+	 * 	 * 	//依赖于AnnotatedElementUtils#hasMetaAnnotationTypes
+	 *
 	 * Determine whether the underlying class has an annotation that is itself
 	 * annotated with the meta-annotation of the given type.
 	 * @param metaAnnotationName the fully qualified class name of the
@@ -67,7 +73,7 @@ public interface AnnotationMetadata extends ClassMetadata, AnnotatedTypeMetadata
 	 */
 	boolean hasMetaAnnotation(String metaAnnotationName);
 
-	/**
+	/** 类里面只有有一个方法标注有指定注解，就返回true
 	 * Determine whether the underlying class has any methods that are
 	 * annotated (or meta-annotated) with the given annotation type.
 	 * @param annotationName the fully qualified class name of the annotation
@@ -76,6 +82,7 @@ public interface AnnotationMetadata extends ClassMetadata, AnnotatedTypeMetadata
 	boolean hasAnnotatedMethods(String annotationName);
 
 	/**
+	 * // 返回所有的标注有指定注解的方法元信息。注意返回的是MethodMetadata 原理基本同上
 	 * Retrieve the method metadata for all methods that are annotated
 	 * (or meta-annotated) with the given annotation type.
 	 * <p>For any returned method, {@link MethodMetadata#isAnnotated} will

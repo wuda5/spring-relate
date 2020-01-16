@@ -221,7 +221,7 @@ class ConfigurationClassParser {
 		return this.configurationClasses.keySet();
 	}
 
-
+    /**这个方法里面的最后行this.configurationClasses.put(configClass, configClass); 非常重要！，加入到此parser中的属性map集合的这些configCLass,到最后就是被【一次性取出】作为【构建注册特殊bd 】用的！！*/
 	protected void processConfigurationClass(ConfigurationClass configClass) throws IOException {
 		if (this.conditionEvaluator.shouldSkip(configClass.getMetadata(), ConfigurationPhase.PARSE_CONFIGURATION)) {
 			return;
@@ -253,11 +253,12 @@ class ConfigurationClassParser {
 			sourceClass = doProcessConfigurationClass(configClass, sourceClass);
 		}
 		while (sourceClass != null);
-		//一个map，用来存放扫描出来的bean（注意这里的bean不是对象，仅仅bean的信息，因为还没到实例化这一步）
+		//一个map，用来存放扫描出来的bean（注意这里的bean不是对象，仅仅bean的信息，因为还没到实例化这一步）--configurationClasses这里面后面会用做注册特殊@import中所想的bd？
 		this.configurationClasses.put(configClass, configClass);
 	}
 
-	/**
+	/**--这个方法会被所有扫描出的bean都调用的--有处理递归的--this.componentScanParser.parse是解析到配置类所以bean并且注册普通的bd
+	 * -- processConfigBeanDefinitions(BeanDefinitionRegistry registry) 来处理特殊如@import的
 	 * 关键看方法：this.componentScanParser.parse(componentScan, sourceClass.getMetadata().getClassName());
 	 * Apply processing and build a complete {@link ConfigurationClass} by reading the
 	 * annotations, members and methods from the source class. This method can be called
@@ -269,11 +270,9 @@ class ConfigurationClassParser {
 	@Nullable
 	protected final SourceClass doProcessConfigurationClass(ConfigurationClass configClass, SourceClass sourceClass)
 			throws IOException {
-
 		// Recursively process any member (nested) classes first
 		//处理内部类
 		processMemberClasses(configClass, sourceClass);
-
 		// Process any @PropertySource annotations
 		for (AnnotationAttributes propertySource : AnnotationConfigUtils.attributesForRepeatable(
 				sourceClass.getMetadata(), PropertySources.class,
@@ -296,7 +295,7 @@ class ConfigurationClassParser {
 				// The config class is annotated with @ComponentScan -> perform the scan immediately
 				//扫描普通类=componentScan=com.luban
 				//这里扫描出来所有@@Component
-				//并且把扫描的出来的普通bean（bd注册 --最底层起作用方法是：ClassPathBeanDefinitionScanner中调用：
+				//并且把扫描的出来的--普通bean（bd注册 --最底层起作用方法是：ClassPathBeanDefinitionScanner中调用：
 				// registerBeanDefinition(definitionHolder, this.registry);）放到map当中
 				Set<BeanDefinitionHolder> scannedBeanDefinitions =
 						this.componentScanParser.parse(componentScan, sourceClass.getMetadata().getClassName());
@@ -307,35 +306,44 @@ class ConfigurationClassParser {
 					if (bdCand == null) {
 						bdCand = holder.getBeanDefinition();
 					}
-					//检查  todo
+					//检查  todo--这里面的parse 就是要来解析处理非普通bean 的bd注册，但是可以看到他是被循环调用的--所有的之前就算被注册过的普通bean的bdh也会来调用，只是它们找不到对应的信息如@import,即不会撒作用
+					// -- 而且它里面的第三层调用方法恰好又会是本方法 doProcessConfigurationClass-->然后到下面一步真正重要的 processImports 处理xx
+					// (普通的bean在上面this.componentScanParser.parse 的时候就已经完成全部普通bean 注册为bd到map了，所以这里是来做看普通bean上面
+					// 是否还有配置configuration标记注解，再次需要解析它上面的包信息，重要！所以此parse方法后面最终又是调用到本方法递归了的)
+					// -- 只是当其所被调用的类中并不是在有配置类configuration标记注解，如普通的bean（真正的普通了哈哈！） ，那么在 最后递归调其实是执行不到到本方法的，
+					// 在 parse中执行到本类方法  processConfigurationClass(ConfigurationClass configClass) 里时，由于先判断了一把：
+					// ConfigurationClass existingClass = this.configurationClasses.get(configClass); 此时existingClass是为空即
+					// 不为空即真的这个bean又是属于配置类，都会递归调用到本方法  doProcessConfigurationClass(configClass, sourceClass);里来，但是if (!componentScans.isEmpty()判断不会进即
+					//会执行到下面一步处理是否含了@import的情况，但是需要注意（很重要！！）：这些特殊bean的注册 是在此doProcessConfigurationClass方法的上 4 级全部执行完后，通过this.reader.loadBeanDefinitions(configClasses);一次性处理这些特殊bean完成注册如@imiport 的bd的
+					//处理看是否是被标注了@import的情况, 即此时processImports 是一次 被调用，当此
+					//总：注意：这个parse方法只是处理@import等 的那些特殊bean ，最终生成了对应的configClass并加入解析器的map集合里面，--并不会完成注册bd,注册这些【特殊bd】 他们是在所有的pares工作完成了后，再一次性调用parser中的map完成注册bd
+					//
 					if (ConfigurationClassUtils.checkConfigurationClassCandidate(bdCand, this.metadataReaderFactory)) {
-						parse(bdCand.getBeanClassName(), holder.getBeanName());
+						parse(bdCand.getBeanClassName(), holder.getBeanName());/**这一步会有把特殊类那种加到configurationClasses ，让后面（具体都是上4级工厂后置处理器的方法了）处理注册他们*/
 					}
 				}
 			}
 		}
 
 		/**
-		 * 上面的代码就是扫描普通类----@Component
+		 * 上面的代码就是扫描普通类-！！！---@Component
 		 * 并且放到了map当中
 		 */
 		// Process any @Import annotations
-		//处理@Import  imports 3种情况
+		//处理@Import  imports 3种情况！！！但是好像还是不会注册bd,最后在上面4级统一注册？
 		//ImportSelector
 		//普通类
 		//ImportBeanDefinitionRegistrar
 		//这里和内部地柜调用时候的情况不同
 		/**
-		 * 这里处理的import是需要判断我们的类当中时候有@Import注解
+		 * 这里处理的import是需要判断我们的类当中时候有@Import注解--通过 getImports(sourceClass)
 		 * 如果有这把@Import当中的值拿出来，是一个类
 		 * 比如@Import(xxxxx.class)，那么这里便把xxxxx传进去进行解析
-		 * 在解析的过程中如果发觉是一个importSelector那么就回调selector的方法
+		 * 在解析的过程中如果发觉是一个importSelector那么就回调会调用selector的方法
 		 * 返回一个字符串（类名），通过这个字符串得到一个类
 		 * 继而在递归调用本方法来处理这个类
 		 *
 		 * 判断一组类是不是imports（3种import）
-		 *
-		 *
 		 */
 		processImports(configClass, sourceClass, getImports(sourceClass), true);
 
@@ -541,7 +549,12 @@ class ConfigurationClassParser {
 	}
 
 
-	/**
+	/** sourceClass 是本解析类的 一个内部类，含有2个属性，办好注解及类信息--  Set<SourceClass> 如SourceClass：是
+	 * 通过 被标注有@import（MyImportSelector.class）的配置类sourceClass （appconfig）
+	 * --注意：！！--1.在调用此方法前 就已经将普通的类bean 注册到bdMap完成了，如 config等已经注册bd好了的
+	 * 				2.此方法没有被标注有 @import 的其他bean类也会被调用的，如IndexDao等其他bean, 只是他们返回不到对应的数据，即imports还是空不会生效
+	 * 构造找到需要返回的那些被@import中的类信息  xxx,如：MyImportSelector.class具体是 com.xx.MyImportSelector 类名包裹的成的SourceClass
+	 * 会有//递归调用，考虑MyImportSelector.class 万一也有 import
 	 * Returns {@code @Import} class, considering all meta-annotations.
 	 */
 	private Set<SourceClass> getImports(SourceClass sourceClass) throws IOException {
@@ -551,7 +564,7 @@ class ConfigurationClassParser {
 		return imports;
 	}
 
-	/**
+	/**--没有找到注解@import相关的就是返回空集合--
 	 * Recursively collect all declared {@code @Import} values. Unlike most
 	 * meta-annotations it is valid to have several {@code @Import}s declared with
 	 * different values; the usual process of returning values from the first
@@ -626,7 +639,23 @@ class ConfigurationClassParser {
 				ConfigurationClassParser.this.registry);
 		return group;
 	}
-
+    /**注意：这个方法只是处理@import等 的那些特殊bean ，最终生成了对应的configClass并加入解析器的map集合里面，--并不会完成注册bd,注册这些【特殊bd】 他们是在所有的pares工作完成了后，再一次性调用parser中的map完成注册bd
+	 *
+	 * 1.通过@import（xx.class）对应的类名xx.calss生成其对象ImportSelector 如MyImportSelector，
+	 * 2.用MyImportSelector执行他的回调接口selectImports，生成需要动态所想交给spring注册管理的bd的类名数组 String[] importClassNames 即 IndexDao3 目标对象类名数组，
+	 * 3.将 这些所想动态操作bean的类名如：com.luban.IndexDao3 通过 asSourceClasses(importClassNames) 重要！查找之前缓存所有类信息中得到FileSource并构造出其对应的SourceClass---Collection<SourceClass> importSourceClasses = asSourceClasses(importClassNames);
+	 * 4. 第3操作后就有了目标对象bean的 SoucceClass（上面含此类的注解等信息）
+	 * 5.经过递归一系列操作后，会将此SouceClass 生成对应的 configClass，后又是经过一系列的调用在xx 中执行 this.configurationClasses.put(configClass, configClass);放入了次解析器parser的map中，
+	 * 6. 最后这种特殊 bean注册成bd 就是在所有的解析完了 后！，掉用了 此解析器parser 上面所生成的属性map(configurationClasses集合) 即用configurationClasses 来作为生成注册bd的原料！--一次性处理这些集合的！
+	 *
+	 * 总结：.（1.）即注册这些特殊 bd, 只 执行一次就完成了对所有的特殊bean的bd 注册！，this.reader.loadBeanDefinitions(configClasses);
+	 *       （2.）5.中涉及了2个一系列调用参考下面的解释
+	 *
+	 * --因为后面统一注册@import的bd就是用的this.reader.loadBeanDefinitions(configClasses);中 即原料 configClasses 的，即在准备好统一注册特殊如@import bd的原料
+	 *但是注意：configClass.addImportBeanDefinitionRegistrar(registrar, currentSourceClass.getMetadata()); 处理mportBeanDefinitionRegistrar这个特殊bean--不是@imprt(xxImportSelector.class)
+	 *
+	 *
+	 * */
 	private void processImports(ConfigurationClass configClass, SourceClass currentSourceClass,
 			Collection<SourceClass> importCandidates, boolean checkForCircularImports) {
 
@@ -642,9 +671,9 @@ class ConfigurationClassParser {
 			try {
 				for (SourceClass candidate : importCandidates) {
 					if (candidate.isAssignable(ImportSelector.class)) {
-						// Candidate class is an ImportSelector -> delegate to it to determine imports
+						// Candidate class is an ImportSelector -> delegate to it to determine imports--类名是：class com.luban.imports.MyImportSelector
 						Class<?> candidateClass = candidate.loadClass();
-						//反射实现一个对象
+						//反射实现一个对象--MyImportSelector
 						ImportSelector selector = BeanUtils.instantiateClass(candidateClass, ImportSelector.class);
 						ParserStrategyUtils.invokeAwareMethods(
 								selector, this.environment, this.resourceLoader, this.registry);
@@ -653,11 +682,16 @@ class ConfigurationClassParser {
 									new DeferredImportSelectorHolder(configClass, (DeferredImportSelector) selector));
 						}
 						else {
-							//回调
+							//回调--重要！！--得到--想要动态被添加到spring 的类的名字列表，如：com.luban.dao.IndexDao3（所想交给spring的目标对象） 后面反射得对象--
+							//如果是我自己做的化， 紧接着马上下一步可能就想着importClassNames目标对象类名+BeanDifinition(类名) 构造生成bd 然后 注册bd了，
+							// 但是 spring 做的不是这样，它考虑了要被操作的类名万一类上面也有注解@import 的情况的！
+							// 1.且是还将类名包裹成SourceClass对象，  2.xx马上又递归调用 在传入此 Collection<SourceClass> importSourceClasses 递归调用此方法
+							// 3.这时候就会进入最下面else 中方法：processConfigurationClass(candidate.asConfigClass(configClass));--这里面会完成很重要的一步--将 ConfigurationClass 加入到 此 parser解析器的map集合中							// 先 通过candidate.asConfigClass(configClass) 构造出 一个 ConfigurationClass（特殊bean就是用它来注册bd的），
+							// 4.此configClass 最后在所有解析操作完成后，外面调用此解析器解析过程所 生成的map<ConfigurationClass,ConfigurationClass>集合，完成对 特殊bd的注册
 							String[] importClassNames = selector.selectImports(currentSourceClass.getMetadata());
-							Collection<SourceClass> importSourceClasses = asSourceClasses(importClassNames);
+							Collection<SourceClass> importSourceClasses = asSourceClasses(importClassNames);//从最先的缓存metadataReaderFactory（CachingMetaDataReaderFactory，）中找对应的source,构造(new SourceClass(this.metadataReaderFactory.getMetadataReader(className));)出这个
 							//递归，这里第二次调用processImports
-							//如果是一个普通类，会斤else
+							//如果是一个普通类，会斤else--递归调用原因：selector.selectImports执行后返回字符串对应类可能也有import的清空，所以xxx类
 							processImports(configClass, currentSourceClass, importSourceClasses, false);
 						}
 					}
@@ -669,7 +703,7 @@ class ConfigurationClassParser {
 								BeanUtils.instantiateClass(candidateClass, ImportBeanDefinitionRegistrar.class);
 						ParserStrategyUtils.invokeAwareMethods(
 								registrar, this.environment, this.resourceLoader, this.registry);
-						//添加到一个list当中和importselector不同
+						//添加到一个list当中和importselector不同--重要！！--因为后面统一注册@import的bd就是用的configClass中的，即在准备好统一注册特殊如@import bd的原料
 						configClass.addImportBeanDefinitionRegistrar(registrar, currentSourceClass.getMetadata());
 					}
 					else {
@@ -682,6 +716,8 @@ class ConfigurationClassParser {
 						//如果是importSelector，会先放到configurationClasses后面进行出来注册
 						this.importStack.registerImport(
 								currentSourceClass.getMetadata(), candidate.getMetadata().getClassName());
+						/**这里非常重要！里面有此解析器parser-->put ConfigurationClass到其属性map上面操作！--其最后被使用的地方是方法的第6层了Set<ConfigurationClass> configClasses = new LinkedHashSet<>(parser.getConfigurationClasses());
+						 * 拿到后，它下面马上就调用了 this.reader.loadBeanDefinitions(configClasses); 完成注册这些特殊bean 的bd--*/
 						processConfigurationClass(candidate.asConfigClass(configClass));
 					}
 				}
@@ -753,10 +789,14 @@ class ConfigurationClassParser {
 
 	/**
 	 * Factory method to obtain {@link SourceClass SourceClasss} from class names.
+	 *
+	 * asSourceClass(className) 中所用的 缓存this.metadataReaderFactory是一个CachingMetaDataReaderFactory，
+	 * 	它里面的属性metadataReaderCache是一个map,装了所有类的sorucex(FIleSystemResource)信息,而FIleSystemResource又是一个map里面的value是SImpleMetaDataReader含了resouce和注解元信息等！
 	 */
 	private Collection<SourceClass> asSourceClasses(String... classNames) throws IOException {
 		List<SourceClass> annotatedClasses = new ArrayList<>(classNames.length);
 		for (String className : classNames) {
+			/***/
 			annotatedClasses.add(asSourceClass(className));
 		}
 		return annotatedClasses;

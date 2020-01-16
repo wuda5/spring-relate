@@ -108,7 +108,7 @@ class ConfigurationClassBeanDefinitionReader {
 	}
 
 
-	/**
+	/**这里就会完成那些特殊点的bean 注册到bd中，？如：1.import中，2.@bean,3.xml?
 	 * Read {@code configurationModel}, registering bean definitions
 	 * with the registry based on its contents.
 	 */
@@ -135,7 +135,7 @@ class ConfigurationClassBeanDefinitionReader {
 			return;
 		}
 
-		//如果一个类是被import的，会被spring标准
+		//如果一个类是被import的，会被spring标准--isImported()对应Set<ConfigurationClass> importedBy，即表明此bd对应类对象上面 被经过被标导入注解如@Import来生成出来的：如IndexDao3，而不是此类本身被标了这个注解
 		//早这里完成注册
 		if (configClass.isImported()) {
 			registerBeanDefinitionForImportedConfigurationClass(configClass);
@@ -152,7 +152,7 @@ class ConfigurationClassBeanDefinitionReader {
 		loadBeanDefinitionsFromRegistrars(configClass.getImportBeanDefinitionRegistrars());
 	}
 
-	/**
+	/**注意：bdName 是全类名哦如：com.luban.dao.IndexDao3
 	 * Register the {@link Configuration} class itself as a bean definition.
 	 */
 	private void registerBeanDefinitionForImportedConfigurationClass(ConfigurationClass configClass) {

@@ -425,7 +425,7 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 		try {// basePackage:com.luban 转换得到packageSearchPath= classpath*:com/luban/**/*.class
 			String packageSearchPath = ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX +
 					resolveBasePackage(basePackage) + '/' + this.resourcePattern;
-			//asm 读取class文件
+			//asm 读取class文件--asm是一个非常牛逼的技术--很复杂--当时看晕了
 			Resource[] resources = getResourcePatternResolver().getResources(packageSearchPath);
 			boolean traceEnabled = logger.isTraceEnabled();
 			boolean debugEnabled = logger.isDebugEnabled();
