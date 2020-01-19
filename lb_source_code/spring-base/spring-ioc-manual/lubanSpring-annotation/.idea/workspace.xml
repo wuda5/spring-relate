@@ -2,22 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d8323e10-f1b2-42c7-8702-60eff5d1ac6b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../../../spring-framework-5.0.x/lubanIoc/src/main/java/com/luban/beantest/TestBeanFactoryPostProcessorWhereNoComponent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../spring-framework-5.0.x/lubanIoc/src/main/java/com/luban/beantest/TestBeanDefinitionRegistryPostProcessorWhereNoComponent.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../spring-framework-5.0.x/lubanIoc/src/main/java/com/luban/app/Appconfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../spring-framework-5.0.x/lubanIoc/src/main/java/com/luban/app/Appconfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../spring-framework-5.0.x/lubanIoc/src/main/java/com/luban/beantest/TestBeanPostProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../spring-framework-5.0.x/lubanIoc/src/main/java/com/luban/beantest/TestBeanPostProcessor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../spring-framework-5.0.x/lubanIoc/src/main/java/com/luban/dao/IndexDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../spring-framework-5.0.x/lubanIoc/src/main/java/com/luban/dao/IndexDao.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../spring-framework-5.0.x/lubanIoc/src/main/java/com/luban/dao/testwu.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../spring-framework-5.0.x/lubanIoc/src/main/java/com/luban/dao/testwu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../spring-framework-5.0.x/lubanIoc/src/main/java/com/luban/dao/IndexDao3.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../spring-framework-5.0.x/lubanIoc/src/main/java/com/luban/dao/IndexDao3.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../spring-framework-5.0.x/lubanIoc/src/main/java/com/luban/imports/MyImportSelector.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../spring-framework-5.0.x/lubanIoc/src/main/java/com/luban/imports/MyImportSelector.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../spring-framework-5.0.x/lubanIoc/src/main/java/com/luban/test/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../spring-framework-5.0.x/lubanIoc/src/main/java/com/luban/test/Test.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../spring-framework-5.0.x/spring-beans/src/main/java/org/springframework/beans/factory/support/AbstractAutowireCapableBeanFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../spring-framework-5.0.x/spring-beans/src/main/java/org/springframework/beans/factory/support/AbstractAutowireCapableBeanFactory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../spring-framework-5.0.x/spring-beans/src/main/java/org/springframework/beans/factory/support/AbstractBeanFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../spring-framework-5.0.x/spring-beans/src/main/java/org/springframework/beans/factory/support/AbstractBeanFactory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../spring-framework-5.0.x/spring-beans/src/main/java/org/springframework/beans/factory/support/DefaultSingletonBeanRegistry.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../spring-framework-5.0.x/spring-beans/src/main/java/org/springframework/beans/factory/support/DefaultSingletonBeanRegistry.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../spring-framework-5.0.x/spring-cglib1/src/main/java/com/luban/app/Appconfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../spring-framework-5.0.x/spring-cglib1/src/main/java/com/luban/app/Appconfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../spring-framework-5.0.x/spring-context/src/main/java/org/springframework/context/annotation/AnnotationConfigApplicationContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../spring-framework-5.0.x/spring-context/src/main/java/org/springframework/context/annotation/AnnotationConfigApplicationContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../spring-framework-5.0.x/spring-beans/src/main/java/org/springframework/beans/factory/support/BeanDefinitionRegistryPostProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../spring-framework-5.0.x/spring-beans/src/main/java/org/springframework/beans/factory/support/BeanDefinitionRegistryPostProcessor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../spring-framework-5.0.x/spring-context/src/main/java/org/springframework/context/annotation/ConfigurationClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../spring-framework-5.0.x/spring-context/src/main/java/org/springframework/context/annotation/ConfigurationClass.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../spring-framework-5.0.x/spring-context/src/main/java/org/springframework/context/annotation/ConfigurationClassParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../spring-framework-5.0.x/spring-context/src/main/java/org/springframework/context/annotation/ConfigurationClassParser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../spring-framework-5.0.x/spring-context/src/main/java/org/springframework/context/annotation/ConfigurationClassPostProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../spring-framework-5.0.x/spring-context/src/main/java/org/springframework/context/annotation/ConfigurationClassPostProcessor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../spring-framework-5.0.x/spring-context/src/main/java/org/springframework/context/support/AbstractApplicationContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../spring-framework-5.0.x/spring-context/src/main/java/org/springframework/context/support/AbstractApplicationContext.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../spring-framework-5.0.x/spring-context/src/main/java/org/springframework/context/support/ApplicationContextAwareProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../spring-framework-5.0.x/spring-context/src/main/java/org/springframework/context/support/ApplicationContextAwareProcessor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../spring-framework-5.0.x/spring-context/src/main/java/org/springframework/context/support/PostProcessorRegistrationDelegate.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../spring-framework-5.0.x/spring-context/src/main/java/org/springframework/context/support/PostProcessorRegistrationDelegate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../spring相关uml.png" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../spring相关uml.png" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/classes/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -32,11 +27,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/org/spring/util/AnnotationConfigApplicationContext.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="100">
-              <caret line="6" column="13" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
+            <state relative-caret-position="382">
+              <caret line="21" column="26" selection-start-line="21" selection-start-column="21" selection-end-line="21" selection-end-column="26" />
             </state>
           </provider>
         </entry>
@@ -45,7 +40,7 @@
         <entry file="file://$PROJECT_DIR$/src/main/java/com/luban/service/UserServiceImpl1.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="175">
-              <caret line="8" column="4" lean-forward="true" selection-start-line="8" selection-start-column="4" selection-end-line="8" selection-end-column="4" />
+              <caret line="8" column="4" selection-start-line="8" selection-start-column="4" selection-end-line="8" selection-end-column="4" />
             </state>
           </provider>
         </entry>
@@ -68,11 +63,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/luban/dao/UserDaoImpl.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="150">
-              <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
+              <caret line="8" selection-start-line="8" selection-end-line="8" />
             </state>
           </provider>
         </entry>
@@ -90,7 +85,7 @@
         <entry file="file://$PROJECT_DIR$/src/main/java/com/luban/test/Test.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="250">
-              <caret line="14" column="10" lean-forward="true" selection-start-line="14" selection-start-column="10" selection-end-line="14" selection-end-column="10" />
+              <caret line="14" column="34" selection-start-line="14" selection-start-column="34" selection-end-line="14" selection-end-column="34" />
             </state>
           </provider>
         </entry>
@@ -163,7 +158,7 @@
   <component name="MavenRunner">
     <option name="vmOptions" value="-Darchetype=Internal" />
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="-9" />
     <option name="y" value="-9" />
     <option name="width" value="1938" />
@@ -182,6 +177,67 @@
               <item name="lubanSpring" type="b2602c69:ProjectViewProjectNode" />
               <item name="lubanSpring-annotation" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="lubanSpring" type="b2602c69:ProjectViewProjectNode" />
+              <item name="lubanSpring-annotation" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="lubanSpring" type="b2602c69:ProjectViewProjectNode" />
+              <item name="lubanSpring-annotation" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="lubanSpring" type="b2602c69:ProjectViewProjectNode" />
+              <item name="lubanSpring-annotation" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="lubanSpring" type="b2602c69:ProjectViewProjectNode" />
+              <item name="lubanSpring-annotation" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="luban" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="lubanSpring" type="b2602c69:ProjectViewProjectNode" />
+              <item name="lubanSpring-annotation" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="luban" type="462c0819:PsiDirectoryNode" />
+              <item name="anno" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="lubanSpring" type="b2602c69:ProjectViewProjectNode" />
+              <item name="lubanSpring-annotation" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="luban" type="462c0819:PsiDirectoryNode" />
+              <item name="dao" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="lubanSpring" type="b2602c69:ProjectViewProjectNode" />
+              <item name="lubanSpring-annotation" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="luban" type="462c0819:PsiDirectoryNode" />
+              <item name="test" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="lubanSpring" type="b2602c69:ProjectViewProjectNode" />
+              <item name="lubanSpring-annotation" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="util" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -194,7 +250,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../spring-framework-5.0.x" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="project.structure.last.edited" value="Project" />
@@ -226,22 +282,23 @@
       <updated>1578538316879</updated>
       <workItem from="1578538322154" duration="5856000" />
       <workItem from="1578629214543" duration="1704000" />
+      <workItem from="1579238833247" duration="609000" />
+      <workItem from="1579331950595" duration="2041000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="7560000" />
+    <option name="totallyTimeSpent" value="10210000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="-7" width="1550" height="838" extended-state="7" />
-    <editor active="true" />
+    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <layout>
       <window_info id="Image Layers" order="0" />
       <window_info id="Designer" order="1" />
       <window_info id="UI Designer" order="2" />
       <window_info id="Capture Tool" order="3" />
       <window_info id="Favorites" order="4" side_tool="true" />
-      <window_info active="true" content_ui="combo" id="Project" order="5" visible="true" weight="0.25603217" />
+      <window_info active="true" content_ui="combo" id="Project" order="5" visible="true" weight="0.26340482" />
       <window_info id="Structure" order="6" side_tool="true" weight="0.25" />
       <window_info id="Web" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Docker" order="0" show_stripe_button="false" />
@@ -301,24 +358,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/luban/test/Test.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="250">
-          <caret line="14" column="10" lean-forward="true" selection-start-line="14" selection-start-column="10" selection-end-line="14" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/spring/util/AnnotationConfigApplicationContext.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="100">
-          <caret line="6" column="13" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/luban/service/UserServiceImpl1.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="175">
-          <caret line="8" column="4" lean-forward="true" selection-start-line="8" selection-start-column="4" selection-end-line="8" selection-end-column="4" />
+          <caret line="8" column="4" selection-start-line="8" selection-start-column="4" selection-end-line="8" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/luban/service/UserServiceImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="200">
+          <caret line="10" column="7" selection-start-line="10" selection-start-column="7" selection-end-line="10" selection-end-column="7" />
         </state>
       </provider>
     </entry>
@@ -326,6 +376,20 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="50">
           <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/luban/dao/UserDaoImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="8" selection-start-line="8" selection-end-line="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/luban/dao/UserDao.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="50">
+          <caret line="2" column="17" selection-start-line="2" selection-start-column="17" selection-end-line="2" selection-end-column="17" />
         </state>
       </provider>
     </entry>
@@ -350,24 +414,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/luban/service/UserServiceImpl.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/luban/test/Test.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="200">
-          <caret line="10" column="7" selection-start-line="10" selection-start-column="7" selection-end-line="10" selection-end-column="7" />
+        <state relative-caret-position="250">
+          <caret line="14" column="34" selection-start-line="14" selection-start-column="34" selection-end-line="14" selection-end-column="34" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/luban/dao/UserDao.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/spring/util/AnnotationConfigApplicationContext.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="50">
-          <caret line="2" column="17" selection-start-line="2" selection-start-column="17" selection-end-line="2" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/luban/dao/UserDaoImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
+        <state relative-caret-position="382">
+          <caret line="21" column="26" selection-start-line="21" selection-start-column="21" selection-end-line="21" selection-end-column="26" />
         </state>
       </provider>
     </entry>

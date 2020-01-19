@@ -44,6 +44,17 @@ import org.springframework.lang.Nullable;
  * 会在currentRegistryProcessors.add(beanFactory.getBean(ppName, BeanDefinitionRegistryPostProcessor.class));里 将重要的 configrurationClassPostProcessor实例初始放入sintonMap
  * Delegate for AbstractApplicationContext's post-processor handling.
  *
+ * --如果我在外面这样写：		oc.addBeanFactoryPostProcessor(new TestBeanFactoryPostProcessorWhereNoComponent());
+ * 		                        oc.addBeanFactoryPostProcessor(new TestBeanDefinitionRegistryPostProcessorWhereNoComponent());
+ * 并且 TestBeanFactoryPostProcessorWhereNoComponent 和 TestBeanDefinitionRegistryPostProcessorWhereNoComponent 都是没加 注解@copnent的化，那么
+ * 传进来的 beanFactoryPostProcessors 就会是包含这两个 BeanFactoryPostProcessor 的
+ * （他们会再这之前即ioc.addxx时就会再容器的集合 beanFactoryPostProcessors 上加上这个，只是他们还没被注册bd,但是可以起到作用！
+ * 到最后，会否注册bd?---
+ * 注意了：
+ * 1.他们到最后也不会注册bd的，即更加不能从容器中拿到他们两，但是由于他们存在 容器自己的一个 beanFactoryPostProcessors 集合
+ * 中，所以他们可以发挥他们的作用，这样理解（他们自己都没有加@compent注解，也没有外面感觉类似动态往工厂加bd入@import中xx,当然就没有xxx）
+ * 2.只有用另外一种方式用如：加@comopnent 他们后面才会注册bd,继而拿到容器对象）
+ *
  * @author Juergen Hoeller
  * @since 4.0
  */
@@ -59,10 +70,10 @@ final class PostProcessorRegistrationDelegate {
 		if (beanFactory instanceof BeanDefinitionRegistry) {
 			BeanDefinitionRegistry registry = (BeanDefinitionRegistry) beanFactory;
 
-			List<BeanFactoryPostProcessor> regularPostProcessors = new ArrayList<>();
-			List<BeanDefinitionRegistryPostProcessor> registryProcessors = new ArrayList<>();
+			List<BeanFactoryPostProcessor> regularPostProcessors = new ArrayList<>();// --专门处理 BeanFactoryPostProcessor 的回调接口实现集合--他是【后】
+			List<BeanDefinitionRegistryPostProcessor> registryProcessors = new ArrayList<>();//--专门处理BeanDefinitionRegistryPostProcessor 的回调接口实现集合--他是【先】
 
-			//自定义的beanFactoryPostProcessors
+			//自定义的beanFactoryPostProcessors，此时要通过外面直接是oc.addBeanFactoryPostProcessor(new TestBeanFactoryPostProcessorWhereNoComponent());方法参数beanFactoryPostProcessors才会有数据
 			for (BeanFactoryPostProcessor postProcessor : beanFactoryPostProcessors) {
 				if (postProcessor instanceof BeanDefinitionRegistryPostProcessor) {
 					BeanDefinitionRegistryPostProcessor registryProcessor =
@@ -71,6 +82,7 @@ final class PostProcessorRegistrationDelegate {
 					registryProcessors.add(registryProcessor);
 				}
 				else {//BeanDefinitionRegistryPostProcessor  BeanfactoryPostProcessor
+					//自定义BeanFactoryPostProcessor 但是是没有加@compnent 而是用ioc.addBeanFactoryPostProcessor(xx)如：xx=TestBeanFactoryPostProcessorWhereNoComponent
 					regularPostProcessors.add(postProcessor);
 				}
 			}
@@ -79,7 +91,7 @@ final class PostProcessorRegistrationDelegate {
 			// uninitialized to let the bean factory post-processors apply to them!
 			// Separate between BeanDefinitionRegistryPostProcessors that implement
 			// PriorityOrdered, Ordered, and the rest.--注意了：这里说的BeanDefinitionRegistryPostProcessor 和 后置处理器 beanPostProcessor接口不是一回事没联系！！，这里的ConfigurationAnnotationProcessor就是BeanDefinitionRegistryPostProcessor用来扫描配置类注解类上的那些bean的主要
-			//这个currentRegistryProcessors 放的是spring内部自己实现了BeanDefinitionRegistryPostProcessor接口的对象
+			//这个currentRegistryProcessors 放的是spring内部自己实现了BeanDefinitionRegistryPostProcessor接口的对象+其实只可能是一个，用list原因我猜测是考虑今后spring自己会提供多个？？
 
 			List<BeanDefinitionRegistryPostProcessor> currentRegistryProcessors = new ArrayList<>();
 
@@ -114,17 +126,17 @@ final class PostProcessorRegistrationDelegate {
 			//最重要。注意这里是方法调用
 			//执行所有BeanDefinitionRegistryPostProcessor
 			/**
-			 * 作用：一句话：扫描生成bdfs放入工厂（即准备好bdf原料）
+			 * ConfigurationClassPostProcessor 再此作用：一句话：扫描生成bdfs放入工厂（即准备好bdf原料）--注意：是会将注册所有的bd！--包括特殊的bean 如：@import,@bean, xml @xx
 			 * 如果是第一次通过fresh调用执行到这里话，就已经那么currentRegistryProcessors=上面beanFactory.getBean后刚刚所创建好的一个在已经spring的bean工厂中所存在的真的可用的对象bean了，
 			 * 1.无论如何currentRegistryProcessors这个集合中都会有一个上面所说的spring默认的BeanDefinitionRegistryPostProcessor（ConfigurationClassPostProcessor），其中ConfigurationClassPostProcessor
 			 * 肯定会执行对appconfig的上面包注解scan路径com.luban后分析经过复杂操作，生成所要注册的bd到上下文（但注意，此时并没有实例化他们），
 			 * 2.经过1后，并且经过下面的一系列后beanFactory就有了很多扫描的bd了，而如果此bd中恰好有其他的类定义时实现了接口BeanDefinitionRegistryPostProcessor 继承了 BeanFactoryPostProcessor，
 			 * 那么它后面就可一在后来调用时，干预了（因为它也是属于BeanDefinitionRegistryPostProcessor）？理解的对否》？
-			 * 第一次fresh调用执行到这里话所用的ConfigurationClassPostProcessor就是实现了接口 BeanDefinitionRegistryPostProcessor的
+			 * 第一次fresh调用执行到这里话所用的 ConfigurationClassPostProcessor 就是实现了接口 BeanDefinitionRegistryPostProcessor的
 			 * */
 			invokeBeanDefinitionRegistryPostProcessors(currentRegistryProcessors, registry);
-			//执行完成了所有BeanDefinitionRegistryPostProcessor
-			//这个list只是一个临时变量，故而要清除--
+			//上面这一步应该是只执行完成了spring内部的所有 BeanDefinitionRegistryPostProcessor--因为currentRegistryProcessors 就是拿的内置的（1个）解释看接口 BeanDefinitionRegistryPostProcessor 中说明有点问题，被老师误导了感觉
+			//这个list只是一个临时变量，故而要清除（后面没有用了，节省空间）- 就上面他妈的一行代码学习了4，5天啊！！！
 			currentRegistryProcessors.clear();
 
 			// Next, invoke the BeanDefinitionRegistryPostProcessors that implement Ordered.
@@ -160,7 +172,9 @@ final class PostProcessorRegistrationDelegate {
 			sortPostProcessors(currentRegistryProcessors, beanFactory);
 			registryProcessors.addAll(currentRegistryProcessors);
 			/***重要：虽然上面也是调用了一遍（那是spring 内置的实现BeanFactoryPostProcessor的类ConfigurationClassPostProcessor 它完成了所有bean的扫苗有了所有bdf
-			 ），这里就是相当是对那些自定义实现BeanFactoryPostProcessor 的类处理他们的扩展功能*/
+			 ），这里就是相当是对那些自定义实现 BeanDefinitionRegistryPostProcessor切记它也是上面完成了！的类处理他们的扩展功能，
+			 *按道理说，自定义的也应该是上面就执行了的，都把currentRegistryProcessors 清空了，不太明白为何再执行了一次？？？其实没有意义的！
+			 */
 			invokeBeanDefinitionRegistryPostProcessors(currentRegistryProcessors, registry);
 			currentRegistryProcessors.clear();/**清空原因？*/
 
@@ -183,12 +197,13 @@ final class PostProcessorRegistrationDelegate {
 			}
 
 			// Now, invoke the postProcessBeanFactory callback   of all processors handled so far.
-			//执行BeanFactoryPostProcessor的回调，前面不是吗？
-			/**这里说的点睛之笔了： 前面执行的BeanFactoryPostProcessor的子类BeanDefinitionRegistryPostProcessor的回调*/
+			//执行BeanFactoryPostProcessor的回调，前面不是吗？（前面都是处理的其子接口的回调--读上面句spring的注释！！）
+			/**这里说的点睛之笔了： 前面执行的BeanFactoryPostProcessor的子类 BeanDefinitionRegistryPostProcessor 的回调，
+			 * 这里开始全部处理 的是 BeanFactoryPostProcessor 的实现集合 registryProcessors + regularPostProcessors（因为BeanDefinitionRegistryPostProcessor 也是属于工厂后置xx） 回调*/
 			//这是执行的是BeanFactoryPostProcessor    postProcessBeanFactory
-			//ConfuguratuonClassPpostProcssor
+			/**ConfuguratuonClassPpostProcssor 的，下面这个方法是spring 最难的最牛的！！ cglib!!*/
 			invokeBeanFactoryPostProcessors(registryProcessors, beanFactory);
-			/**重要： 自定义BeanFactoryPostProcessor**/
+			/**重要： 2.自定义BeanFactoryPostProcessor 但是是没有加@compnent 而是用ioc.addBeanFactoryPostProcessor(xx)如：xx=TestBeanFactoryPostProcessorWhereNoComponent **/
 			invokeBeanFactoryPostProcessors(regularPostProcessors, beanFactory);
 		}
 
@@ -240,6 +255,7 @@ final class PostProcessorRegistrationDelegate {
 		for (String postProcessorName : nonOrderedPostProcessorNames) {
 			nonOrderedPostProcessors.add(beanFactory.getBean(postProcessorName, BeanFactoryPostProcessor.class));
 		}
+		/**处理经过扫描等系列操作spirng 注册bd中有是BeanFactoryPostProcessor 的类，处理他们(即自定义的即加@compnent那种)的后置逻辑xx， 如：TestBeanFactoryPostProcessor */
 		invokeBeanFactoryPostProcessors(nonOrderedPostProcessors, beanFactory);
 
 		// Clear cached merged bean definitions since the post-processors might have

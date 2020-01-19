@@ -385,8 +385,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 				}
 				for (String candidateName : newCandidateNames) {
 					if (!oldCandidateNames.contains(candidateName)) {
-						/**这里才是在注册 BeanFacotryPostProcessor 工长后置处理器(自己实现的并且是加了@compnent的),和 普通的 BeanPostProcessors 后置处理器
-						 * 还有 FactoryBean+ 普通的bean 如Test5
+						/**
 						 * 为啥在都这呢?这里不是注册，是获取刚刚被注册的bd构建处bdh，加入candidates返回上一级*/
 						BeanDefinition bd = registry.getBeanDefinition(candidateName);
 						if (ConfigurationClassUtils.checkConfigurationClassCandidate(bd, this.metadataReaderFactory) &&

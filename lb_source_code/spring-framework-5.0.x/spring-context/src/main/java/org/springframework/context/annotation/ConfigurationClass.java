@@ -55,7 +55,7 @@ final class ConfigurationClass {
 
 	@Nullable
 	private String beanName;
-   /***这里来暂时保存的就是那些需要通过@import指向的特殊的xx,再后面通过registerBeanDefinitionForImportedConfigurationClass(configClass);，注册到bdmap*/
+   /***这里来暂时保存的就是特殊的xx是否被xx,再后面通过registerBeanDefinitionForImportedConfigurationClass(configClass);，注册到bdmap*/
 	private final Set<ConfigurationClass> importedBy = new LinkedHashSet<>(1);
 
 	private final Set<BeanMethod> beanMethods = new LinkedHashSet<>();

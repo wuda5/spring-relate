@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Proxy;
 
-/*** 把indexDao3 看作是 【AopBeanPostProcessor】！！！！！！！！！！！！！！！！！！---
+/*** 把indexDao3 看作是 【AopBeanPostProcessor】！！！！！！！！！！！！！！！！！！
  * 注意：他此时不需要加@component，他是被@import 的MyImportSelector 所通过返回的类名反射先生成了对象后，再生成bd,
  * 再再后面经过特殊注册到bdMap中，--再ConfigurationCLassPostProcessor工厂后置处理器processConfigBeanDefinitions方法中调用 this.reader.loadBeanDefinitions(configClasses);
  * 再在后面生成bean 的！！

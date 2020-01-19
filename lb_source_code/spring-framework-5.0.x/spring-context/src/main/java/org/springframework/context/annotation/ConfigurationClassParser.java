@@ -128,7 +128,8 @@ class ConfigurationClassParser {
 	private final ComponentScanAnnotationParser componentScanParser;
 
 	private final ConditionEvaluator conditionEvaluator;
-
+/**这个map非常重要，它虽然存了所有的被解析的类信息，但是最后特殊bd的注册时用到它时，会自己判断拿有用的-
+ * -它是所有特殊bd注册的原料！！--和普通bean的注册非常不同，普通的根本就没有需要用个集合统一保存再处理*/
 	private final Map<ConfigurationClass, ConfigurationClass> configurationClasses = new LinkedHashMap<>();
 
 	private final Map<String, ConfigurationClass> knownSuperclasses = new HashMap<>();
@@ -208,7 +209,8 @@ class ConfigurationClassParser {
 	}
 
 	/**
-	 * Validate each {@link ConfigurationClass} object.
+	 * Validate each {@link ConfigurationClass} o
+	 * bject.
 	 * @see ConfigurationClass#validate
 	 */
 	public void validate() {

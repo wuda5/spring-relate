@@ -4,6 +4,7 @@ import com.luban.anno.EanbleLuabn;
 import com.luban.app.Appconfig;
 import com.luban.dao.IndexDao3;
 import org.springframework.context.annotation.ImportSelector;
+import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.core.type.MethodMetadata;
 import org.springframework.core.type.StandardAnnotationMetadata;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Set;
 
 /**
+ * ---相当于我在另一个mybatis-log中写的 LubanREgistatrar 类--类似作用：---不同之处是xxstartar 是可以直接拿到注册器，xxx---
  * 在源码解析4 中涉及--想要被调用起作用--还必须在配置类上：@Import({MyImportSelector.class})
  *
  * MyImportSelector 是不需要放入spring(相当于一个中间起作用的插件而已，主要是为了想导入其他第三方的bean的bd到 spring 的) 中，只需要在appconfig 中 @import(MyImportSelector.calss),
@@ -60,6 +62,8 @@ public class MyImportSelector implements ImportSelector {
 
 		Annotation[] annotations = imd.getAnnotations();// 这个方法是我加到spring的！！！！！！！
 		// 判断一个注解属性哪种类型？--spring 好像由工具类--
+//		AnnotationAttributes annoAttrs = AnnotationAttributes.fromMap(importingClassMetadata.getAnnotationAttributes(EanbleLuabn.class.getName()));
+//		annoAttrs.getStringArray("basePackages")
 		for (Annotation at : annotations) {
 			if(at.annotationType().equals(EanbleLuabn.class)){
 				// 如何获得Appconfig的class??

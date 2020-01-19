@@ -1,6 +1,7 @@
 package com.luban.test;
 
 import com.luban.app.Appconfig;
+import com.luban.beantest.TestBeanDefinitionRegistryPostProcessorWhereNoComponent;
 import com.luban.beantest.TestBeanFactoryPostProcessorWhereNoComponent;
 import com.luban.dao.Dao;
 import com.luban.dao.IndexDao;
@@ -22,7 +23,8 @@ public class Test {
 		oc.register(Appconfig.class);
 
 		// 这样使用 TestBeanFactoryPostProcessorWhereNoComponent 都不会注册bd了的！！，而采用注解使用，是会产生bean即会注册bean,
-//		oc.addBeanFactoryPostProcessor(new TestBeanFactoryPostProcessorWhereNoComponent());
+		oc.addBeanFactoryPostProcessor(new TestBeanFactoryPostProcessorWhereNoComponent());
+		oc.addBeanFactoryPostProcessor(new TestBeanDefinitionRegistryPostProcessorWhereNoComponent());
 		oc.refresh();
 
 //		IndexDao bean0 = oc.getBean(IndexDao.class);//--已经是变为代理对象的了，class类对象不是IndexDao.class了而是@proxxx,但在工厂中的bdName 还是以前的indexDao
