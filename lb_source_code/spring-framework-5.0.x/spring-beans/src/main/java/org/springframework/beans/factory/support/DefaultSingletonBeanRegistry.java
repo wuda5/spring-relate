@@ -196,7 +196,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 		return singletonObject;
 	}
 
-	/**
+	/** a2.
 	 * Return the (raw) singleton object registered under the given name,
 	 * creating and registering a new one if none registered yet.
 	 * @param beanName the name of the bean
@@ -228,6 +228,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 					this.suppressedExceptions = new LinkedHashSet<>();
 				}
 				try {
+					/** a2. 获取a1.所生产出的bean, 再后面a3.会放入单例池**/
 					singletonObject = singletonFactory.getObject();//这个方法注意：singletonFactory是一个函数式接口，其真实调用在上一级createBean，而这个方法其实又是上级类的父类的方法，内部其实在createBean操作
 					newSingleton = true;
 				}
@@ -255,6 +256,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 					afterSingletonCreation(beanName);
 				}
 				if (newSingleton) {
+					/**a3.放入单例池 **/
 					addSingleton(beanName, singletonObject);/**这一步是最最要，bd放入bdMap是之前就好了，这里是将bean 放入 单例池完成了bean 生命**/
 				}
 			}

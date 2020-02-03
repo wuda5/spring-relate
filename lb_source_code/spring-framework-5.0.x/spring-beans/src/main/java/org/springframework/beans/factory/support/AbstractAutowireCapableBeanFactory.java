@@ -414,9 +414,12 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			throws BeansException {
 
 		Object result = existingBean;
+		//获取所有注册的BeanPostProcessor,当执行postProcessBeforeInitialization的结果和当前bean相同则跳出执行（）
+		//第一个执行的就是ApplicationContextAwareProcessor，立马就短路
 		for (BeanPostProcessor processor : getBeanPostProcessors()) {
 			Object current = processor.postProcessBeforeInitialization(result, beanName);
 			if (current == null) {
+				/**如果执行结果是null也跳出执行，短路（造成其他的后置处理器不执行）*/
 				return result;
 			}
 			result = current;
@@ -457,7 +460,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 	/**
 	 * Central method of this class: creates a bean instance,
-	 * populates the bean instance, applies post-processors, etc.
+	 * populates the bean instance, applies post-processors, etc.-- 注册到dbmap 是在上一级中将此方法返回对象放入 addSingleton(beanName, singletonObject);
 	 * @see #doCreateBean
 	 */
 	@Override
@@ -561,6 +564,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			 */
 			instanceWrapper = createBeanInstance(beanName, mbd, args);
 		}
+		/**--拿到 原始 对象 target **/
 		final Object bean = instanceWrapper.getWrappedInstance();
 		Class<?> beanType = instanceWrapper.getWrappedClass();
 		if (beanType != NullBean.class) {
@@ -598,7 +602,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		try {
 			//二.设置属性，（实例化位置？实例了在前面执行了instanceWrapper = createBeanInstance(beanName, mbd, args);）（这里也有用到后置处理器，只是它好像是针对那些实现了InstantiationAwareBeanPostProcessor 的那些自定义的 aware 在这个过程进行扩展可干预！可以叫在init前，设置属性的前后xx的处理器 ）非常重要，instanceWrapper就是上面通过createBeanInstance(beanName, mbd, args);构造反射（相当于执行了构造器方法?）的实例对象后到这里进行属性注入？
 			populateBean(beanName, mbd, instanceWrapper);
-			//三.执行初始化init,利用后置处理器，aop就是在这里完成的处理---分为了三大步！！（
+			//三.(执行初始化init,利用后置处理器)执行后置处理器，aop就是在这里完成的处理---分为了三大步！！（
 			// 1.init-before applyBeanPostProcessorsBeforeInitialization(wrappedBean, beanName);）
 			//2.init即invokeInitMethods(beanName, wrappedBean, mbd);
 			//3.init-after即 applyBeanPostProcessorsAfterInitialization(wrappedBean, beanName);
@@ -1743,11 +1747,13 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		Object wrappedBean = bean;
 		if (mbd == null || !mbd.isSynthetic()) {
 			//1.执行后置处理的befor---如给实现了xxawire接口的对象属性设置上下文，为其提供扩展（都让他拿到容器了，他就可以在其他地方直接.get(xxbean)进行些操作，如解决单例bean依赖的原型bean想要每次得到bean属性都是原型的就可以这样）
+			/**如最简单的 @postConstruct ,执行 postProcessBeforeInitialization **/
 			wrappedBean = applyBeanPostProcessorsBeforeInitialization(wrappedBean, beanName);
 		}
 
 		try {
 			//2.执行bean的声明周期回调中的init方法
+			/** --InitializingBean 接口 如mybatis中的@MapperFactoryBean-->((InitializingBean) bean).afterPropertiesSet();**/
 			invokeInitMethods(beanName, wrappedBean, mbd);
 		}
 		catch (Throwable ex) {
@@ -1757,6 +1763,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 		if (mbd == null || !mbd.isSynthetic()) {
 			//3.执行后置处理器的after方法
+			/**如果有aspectj代理，这里会调用到其 AbstractAutoProxyCreator 后置处理器的afterxx 完成 目标对象的代理生成代理对象**/
 			wrappedBean = applyBeanPostProcessorsAfterInitialization(wrappedBean, beanName);
 		}
 

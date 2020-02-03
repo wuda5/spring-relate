@@ -214,7 +214,10 @@ public class AnnotationConfigUtils {
 		}
 
 		// Check for JSR-250 support, and if present add the CommonAnnotationBeanPostProcessor.
-		// 注册CommonAnnotationBeanPostProcessor
+		// 注册CommonAnnotationBeanPostProcessor--
+		/** -卧槽！！！--源码到这里居然就没通过--讲道理必须通过后，将CommonAnnotationBeanPostProcessor这个后置处理器注册了，后面
+		 *  在使用 @postConstuct 才会有效啊！， */
+//		if (!jsr250Present && !registry.containsBeanDefinition(COMMON_ANNOTATION_PROCESSOR_BEAN_NAME)) {
 		if (jsr250Present && !registry.containsBeanDefinition(COMMON_ANNOTATION_PROCESSOR_BEAN_NAME)) {
 			/**顾名思义就是处理一些公共注解的，它是一个bean的后置处理器，可以处理@PostConstruct和@PreDestroy还有@Resource等*/
 			RootBeanDefinition def = new RootBeanDefinition(CommonAnnotationBeanPostProcessor.class);

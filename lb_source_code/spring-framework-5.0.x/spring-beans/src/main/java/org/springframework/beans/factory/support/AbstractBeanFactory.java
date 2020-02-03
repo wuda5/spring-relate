@@ -271,11 +271,6 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		 *
 		 * 需要说明的是在初始化时候调用一般都是返回null
 		 *
-		 *
-		 *
-		 *
-		 *
-		 *
 		 * lazy
 		 */
 		Object sharedInstance = getSingleton(beanName);
@@ -359,9 +354,14 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				}
 
 				// Create bean instance.--调用getSingleton中经历复杂后，有createBean操作
+				/** 这里的中有发生 aop 的后置处理器作用后生成 出 代理对象！**/
 				if (mbd.isSingleton()) {
 					sharedInstance = getSingleton(beanName, () -> {
 						try {
+							/**a1.此 createBean 经过系列很发展的xxx返回 singletonFactory（singletonObject） ，
+							 * a2.后执行上面getSingleton 中 调用  singletonObject = singletonFactory.getObject()取得creteBean a1.所造出来的bean(singletonObject)--> 后
+							 * a3.再执行  addSingleton(beanName, singletonObject); 完成注册此bean 到 单例池map(singletonObjects) 基本完成！
+							 **/
 							return createBean(beanName, mbd, args);
 						}
 						catch (BeansException ex) {

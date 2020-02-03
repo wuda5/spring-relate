@@ -148,7 +148,7 @@ class ConfigurationClassBeanDefinitionReader {
 		 //xml
 		loadBeanDefinitionsFromImportedResources(configClass.getImportedResources());
 
-		//注册Registrar
+		//注册Registrar--如@mapperscan中xx, spring-aspectj的@import()
 		loadBeanDefinitionsFromRegistrars(configClass.getImportBeanDefinitionRegistrars());
 	}
 

@@ -10,6 +10,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
+import javax.annotation.PostConstruct;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,11 @@ public class TestBeanPostProcessor implements BeanPostProcessor{
 
 	public void setPlistprop(List<String> plistprop) {
 		this.plistprop = plistprop;
+	}
+
+	@PostConstruct
+	public void init(){
+		System.out.println("-----@PostConstruct--在 BeanPostProcessor 中----执行初始init方法------??为何没有执行？？？--------");
 	}
 
 	public TestBeanPostProcessor() {

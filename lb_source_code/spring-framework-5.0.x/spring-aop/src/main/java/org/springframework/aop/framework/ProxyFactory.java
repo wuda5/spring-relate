@@ -98,6 +98,10 @@ public class ProxyFactory extends ProxyCreatorSupport {
 	}
 
 	/**
+	 * 	/**
+	 * 	方法createAopProxy说明如下：
+	 * 	1.可能选择 cglibAopProxy  当在系统配置类配置属性 proxyTargetClass = true 即： @EnableAspectJAutoProxy(proxyTargetClass = true)
+	 *  2.默认是false选择 jdkAopproxy
 	 * Create a new proxy according to the settings in this factory.
 	 * <p>Can be called repeatedly. Effect will vary if we've added
 	 * or removed interfaces. Can add and remove interceptors.
@@ -107,6 +111,8 @@ public class ProxyFactory extends ProxyCreatorSupport {
 	 * @return the proxy object
 	 */
 	public Object getProxy(@Nullable ClassLoader classLoader) {
+
+
 		return createAopProxy().getProxy(classLoader);
 	}
 

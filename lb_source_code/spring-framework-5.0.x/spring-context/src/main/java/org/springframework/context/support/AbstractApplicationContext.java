@@ -598,6 +598,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				 *       4.综上：可以分析处，bean 的实例化 如果按类型不同看世界先后的化是-->BeanFactoryPostProcessor中的内置和外置的顺序可由外置的是哪种方式（注解或不交给spring）有区别的
 				 *       【1.BeanFactoryPostProcessor 的工厂后置处理器】 -->【2.BeanPostProcessor 的后置处理器，一般先内后外的】
 				 *   --> 【3.其他bean】,其中对这里可以简单又是分为几类如下：
+				 *   						【3.0】内置的特殊的些xxx 如：internalEventListenerProcessor--> EventListenerMethodProcessor
+				 *   					                                internalEventListenerFactory--> DefaultEventListenerFactory
 								 *        【3.1. Appconfig 特殊的配置类】
 								 *        【3.2. 实现 FactoryBean 的工厂bean】
 								 *        【3.2. 普通bean】
@@ -945,6 +947,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		}
 
 		// Initialize LoadTimeWeaverAware beans early to allow for registering their transformers early.
+		/** 下面的 preInstantiateSingletons 中可能会有生成aop代理对象**/
 		String[] weaverAwareNames = beanFactory.getBeanNamesForType(LoadTimeWeaverAware.class, false, false);
 		for (String weaverAwareName : weaverAwareNames) {
 			getBean(weaverAwareName);

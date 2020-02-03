@@ -552,7 +552,7 @@ class ConfigurationClassParser {
 
 
 	/** sourceClass 是本解析类的 一个内部类，含有2个属性，办好注解及类信息--  Set<SourceClass> 如SourceClass：是
-	 * 通过 被标注有@import（MyImportSelector.class）的配置类sourceClass （appconfig）
+	 * 通过 被标注有@import（MyImportSelector.class）的配置类sourceClass （appconfig）/ @import(xxxImportBeanDefinitionRegistrar.class)
 	 * --注意：！！--1.在调用此方法前 就已经将普通的类bean 注册到bdMap完成了，如 config等已经注册bd好了的
 	 * 				2.此方法没有被标注有 @import 的其他bean类也会被调用的，如IndexDao等其他bean, 只是他们返回不到对应的数据，即imports还是空不会生效
 	 * 构造找到需要返回的那些被@import中的类信息  xxx,如：MyImportSelector.class具体是 com.xx.MyImportSelector 类名包裹的成的SourceClass

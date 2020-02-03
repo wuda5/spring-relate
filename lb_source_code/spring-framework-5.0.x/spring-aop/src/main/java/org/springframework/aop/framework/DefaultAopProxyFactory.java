@@ -57,9 +57,13 @@ public class DefaultAopProxyFactory implements AopProxyFactory, Serializable {
 			if (targetClass.isInterface() || Proxy.isProxyClass(targetClass)) {
 				return new JdkDynamicAopProxy(config);
 			}
+			/** 1.采用cglib 代理-- **/
+			System.out.println("------------aspectj-------------【1】---------采用cglib 代理 ----代理类："+targetClass);
 			return new ObjenesisCglibAopProxy(config);
 		}
 		else {
+			/** 2.采用 jdk 代理-- **/
+			System.out.println("------------aspectj-------------【2】---------采用 jdk 代理---默认的----代理类："+config.getTargetClass());
 			return new JdkDynamicAopProxy(config);
 		}
 	}

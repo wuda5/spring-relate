@@ -349,9 +349,11 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		}
 
 		// Create proxy if we have advice.
+		/**解析所有的切面配置@aspctj的类*/
 		Object[] specificInterceptors = getAdvicesAndAdvisorsForBean(bean.getClass(), beanName, null);
 		if (specificInterceptors != DO_NOT_PROXY) {
 			this.advisedBeans.put(cacheKey, Boolean.TRUE);
+			/**创建代理对象**/
 			Object proxy = createProxy(
 					bean.getClass(), beanName, specificInterceptors, new SingletonTargetSource(bean));
 			this.proxyTypes.put(cacheKey, proxy.getClass());
@@ -453,9 +455,15 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 
 		if (!proxyFactory.isProxyTargetClass()) {
 			if (shouldProxyTargetClass(beanClass, beanName)) {
+				/** cglib 代理--注意配置了proxyTargetClass = true, 不会进入这里，但是还是会在下面走到选择 cglib --
+				 * 代理类无论是否是接口实现类，都会采用 cglib？？？？
+				 * **/
 				proxyFactory.setProxyTargetClass(true);
 			}
 			else {
+				/** 默认的代理方式，判断代理类是否是接口类，是接口会使用jdk 代理，
+				 * 否则普通类 还是会使用cglib??? --内部判断非接口时会设置 proxyFactory.setProxyTargetClass(true);
+				 * cglib 可以同时处理接口和 类， 而jdk 只能代理接口，*/
 				evaluateProxyInterfaces(beanClass, proxyFactory);
 			}
 		}
@@ -470,6 +478,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 			proxyFactory.setPreFiltered(true);
 		}
 
+		/** getProxy 会自动根据设置 选择到 所对应的 代理机制cglib or jdk **/
 		return proxyFactory.getProxy(getProxyClassLoader());
 	}
 
