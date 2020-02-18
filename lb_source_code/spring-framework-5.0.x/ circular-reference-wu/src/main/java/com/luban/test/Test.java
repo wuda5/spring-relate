@@ -37,7 +37,7 @@ public class Test {
 		c.testxx();
 		getAutoMode("constorService","@autoWired");
 
-		/**自动装配模型--no,byname,**/
+		/**自动装配模型--no,byname, **/
 		 ioc.getBean(AutoServiceNoByAutowired.class).test();
 		getAutoMode("autoServiceNoByAutowired","@autoWired");
 
