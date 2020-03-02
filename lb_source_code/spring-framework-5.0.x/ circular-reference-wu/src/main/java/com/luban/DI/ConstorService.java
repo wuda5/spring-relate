@@ -24,8 +24,10 @@ public class ConstorService {
 	 * 网上看到说使用 @Autowired 就是通过类型来装配的, 在我理解看来，这种说法是不对的--
 	 *
 	 * --所以当前的这种使用也是 NO 模型
+	 * 注意： 其实这里是不需要加 @AutoWIred, 因为再实例化此对象时候，--> 判断构造方法是否为空，判断是否根据构造方法自动注入
 	 * */
 	@Autowired
+//	@ConstructorProperties()
 	public ConstorService(LuBanService lubanService) {
 		this.lubanService = lubanService;/** 不加她，并且属性也米有加 @Autowired 那么此属性值会是空null ,加了她--> 其实就是为 4种自动装配之 构造器装配*/
 		System.out.println("【 C 】+++++++++ ConstorService 有参数的 构造器++++ indexservice +++参数："+lubanService);
