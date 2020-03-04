@@ -16,35 +16,6 @@
 
 package org.springframework.context.annotation;
 
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
-import java.io.Serializable;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Member;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.annotation.Resource;
-import javax.ejb.EJB;
-import javax.xml.namespace.QName;
-import javax.xml.ws.Service;
-import javax.xml.ws.WebServiceClient;
-import javax.xml.ws.WebServiceRef;
-
 import org.springframework.aop.TargetSource;
 import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.beans.BeanUtils;
@@ -55,22 +26,32 @@ import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor;
 import org.springframework.beans.factory.annotation.InjectionMetadata;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.beans.factory.config.DependencyDescriptor;
-import org.springframework.beans.factory.config.EmbeddedValueResolver;
-import org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessor;
+import org.springframework.beans.factory.config.*;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.core.BridgeMethodResolver;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.Ordered;
 import org.springframework.jndi.support.SimpleJndiBeanFactory;
 import org.springframework.lang.Nullable;
-import org.springframework.util.Assert;
-import org.springframework.util.ClassUtils;
-import org.springframework.util.ReflectionUtils;
-import org.springframework.util.StringUtils;
-import org.springframework.util.StringValueResolver;
+import org.springframework.util.*;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import javax.annotation.Resource;
+import javax.ejb.EJB;
+import javax.xml.namespace.QName;
+import javax.xml.ws.Service;
+import javax.xml.ws.WebServiceClient;
+import javax.xml.ws.WebServiceRef;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.io.Serializable;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * {@link org.springframework.beans.factory.config.BeanPostProcessor} implementation
@@ -140,11 +121,11 @@ import org.springframework.util.StringValueResolver;
  * @see org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor
  *
  *
- * 主要处理@Resource、@PostConstruct和@PreDestroy注解的实现
- * Resource的处理是由他自己完成
- * 其他两个是由他的父类完成
- * 父类InitDestroyAnnotationBeanPostProcessor的postProcessMergedBeanDefinition
- * 会找出被@PostConstruct和@PreDestroy注解修饰的方法
+ * 主要处理 ：1.@Resource、2. @PostConstruct和@PreDestroy注解的实现
+ * Resource的处理是由他自己完成 --> 对应主要是由 缓存 injectionMetadataCache
+ * 其他两个如：@PostConstruct和@PreDestroy 是由他的父类完成
+ * 父类 InitDestroyAnnotationBeanPostProcessor 的postProcessMergedBeanDefinition
+ * 会找出被@PostConstruct和@PreDestroy注解修饰的方法 --》 --> 对应主要是由 缓存 lifecycleMetadataCache
  */
 @SuppressWarnings("serial")
 public class CommonAnnotationBeanPostProcessor extends InitDestroyAnnotationBeanPostProcessor
@@ -298,10 +279,13 @@ public class CommonAnnotationBeanPostProcessor extends InitDestroyAnnotationBean
 		}
 	}
 
-
+	/***此方法是 整个后置处理器的精华！，它相当是入口，1.有调用父类处理一套逻辑，2.自己再处理一套 （和类介绍呼应）*/
 	@Override
 	public void postProcessMergedBeanDefinition(RootBeanDefinition beanDefinition, Class<?> beanType, String beanName) {
+		/***1. 首先是 调用父类 InitDestroyAnnotationBeanPostProcessor 方法，完成-->
+		 * 找出被@PostConstruct和@PreDestroy注解修饰的方法--最后封装好放入缓存 lifecycleMetadataCache，供 后面 上层调用 */
 		super.postProcessMergedBeanDefinition(beanDefinition, beanType, beanName);
+		/**2. 查询处理如有 @Resouce标注的字段，会放入缓存 injectionMetadataCache*/
 		InjectionMetadata metadata = findResourceMetadata(beanName, beanType, null);
 		metadata.checkConfigMembers(beanDefinition);
 	}
@@ -331,7 +315,8 @@ public class CommonAnnotationBeanPostProcessor extends InitDestroyAnnotationBean
 		return pvs;
 	}
 
-
+	/**关键：--》处理bean 类的字段 有标注注解 @Resouce 的，如有给他封装为 ResourceElement -->后InjectionMetadata ，
+	 * --> 最后放入缓存 injectionMetadataCache 供后面使用 */
 	private InjectionMetadata findResourceMetadata(String beanName, final Class<?> clazz, @Nullable PropertyValues pvs) {
 		// Fall back to class name as cache key, for backwards compatibility with custom callers.
 		String cacheKey = (StringUtils.hasLength(beanName) ? beanName : clazz.getName());
@@ -344,6 +329,8 @@ public class CommonAnnotationBeanPostProcessor extends InitDestroyAnnotationBean
 					if (metadata != null) {
 						metadata.clear(pvs);
 					}
+					/**关键：字段是标注 @Resorce ,则将其封装为 ResourceElement 后加入集合 List<InjectionMetadata.InjectedElement> currElements
+					 * --》 最后如果有多个 currElements，都会又被封装为此bean 类对应的 new InjectionMetadata(clazz, elements);*/
 					metadata = buildResourceMetadata(clazz);
 					this.injectionMetadataCache.put(cacheKey, metadata);
 				}
@@ -351,7 +338,8 @@ public class CommonAnnotationBeanPostProcessor extends InitDestroyAnnotationBean
 		}
 		return metadata;
 	}
-
+	/**关键：字段是标注 @Resorce ,则将其封装为 ResourceElement 后加入集合 List<InjectionMetadata.InjectedElement> currElements
+	 * --》 最后如果有多个 currElements，都会又被封装为此bean 类对应的 new InjectionMetadata(clazz, elements);*/
 	private InjectionMetadata buildResourceMetadata(final Class<?> clazz) {
 		List<InjectionMetadata.InjectedElement> elements = new ArrayList<>();
 		Class<?> targetClass = clazz;
@@ -372,6 +360,8 @@ public class CommonAnnotationBeanPostProcessor extends InitDestroyAnnotationBean
 					}
 					currElements.add(new EjbRefElement(field, field, null));
 				}
+				/**关键：字段是标注 @Resorce ,则将其封装为 ResourceElement 后加入集合 List<InjectionMetadata.InjectedElement> currElements
+				 * --》 最后如果有多个 currElements，都会又被封装为此bean 类对应的 new InjectionMetadata(clazz, elements);*/
 				else if (field.isAnnotationPresent(Resource.class)) {
 					if (Modifier.isStatic(field.getModifiers())) {
 						throw new IllegalStateException("@Resource annotation is not supported on static fields");
