@@ -16,24 +16,8 @@
 
 package org.springframework.beans.factory.annotation;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.Serializable;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.DestructionAwareBeanPostProcessor;
@@ -44,6 +28,16 @@ import org.springframework.core.PriorityOrdered;
 import org.springframework.lang.Nullable;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ReflectionUtils;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * {@link org.springframework.beans.factory.config.BeanPostProcessor} implementation
@@ -125,7 +119,7 @@ public class InitDestroyAnnotationBeanPostProcessor
 
 	@Override
 	public void postProcessMergedBeanDefinition(RootBeanDefinition beanDefinition, Class<?> beanType, String beanName) {
-		//找出被@PostConstruct和@PreDestroy注解修饰的方法
+		//找出被@PostConstruct和@PreDestroy注解修饰的方法--最后封装好放入缓存 lifecycleMetadataCache，供后面使用
 		LifecycleMetadata metadata = findLifecycleMetadata(beanType);
 		metadata.checkConfigMembers(beanDefinition);
 	}
@@ -175,8 +169,16 @@ public class InitDestroyAnnotationBeanPostProcessor
 		return findLifecycleMetadata(bean.getClass()).hasDestroyMethods();
 	}
 
-
+	/***
+	 * 寻找封装该bean 对应的 init 相关生命回调方法数据的封装对象--> new LifecycleMetadata(clazz, initMethods, destroyMethods);
+	 * 	即是 要找 寻此bean类 里面定义的有 initMethods 和 destroyMethods 方法们，
+	 * 	这里引出一个问题，如何认为bean里面的哪些方法 是 initMethods 和 destroyMethods ,
+	 * 	比如加了 @postConstruct 注解的方法 或是xml 中指定配置 init-method 指向的方法	就认为是 initMethods*/
 	private LifecycleMetadata findLifecycleMetadata(Class<?> clazz) {
+		/**1.这个if 判断我举得写的有问题，应该isEmpty，因为这个map是初始化的一个空map,
+		 * 当第一次进 findLifecycleMetadata 时，对于的类是 EventListenerMethodProcessor，它最后 LifecycleMetadata 对应的放入map
+		 * 是在下面再一次 判断get为空时 才调用的构建 buildLifecycleMetadata 后放入其类和构建数据组成entry到 map
+		 * */
 		if (this.lifecycleMetadataCache == null) {
 			// Happens after deserialization, during destruction...
 			return buildLifecycleMetadata(clazz);
@@ -187,6 +189,11 @@ public class InitDestroyAnnotationBeanPostProcessor
 			synchronized (this.lifecycleMetadataCache) {
 				metadata = this.lifecycleMetadataCache.get(clazz);
 				if (metadata == null) {
+					/** 2.! 关键！ 寻找封装该bean 对应的 init 相关生命回调方法数据的封装对象--> new LifecycleMetadata(clazz, initMethods, destroyMethods);
+					 * 即是 要找 寻此bean类 里面定义的有 initMethods 和 destroyMethods 方法们，
+					 * 这里引出一个问题，如何认为bean里面的哪些方法 是 initMethods 和 destroyMethods ,
+					 * 比如加了 @postConstruct 注解的方法 或是xml 中指定配置 init-method 指向的方法	就认为是 initMethods，
+					 * ，上一个是不会进的！**/
 					metadata = buildLifecycleMetadata(clazz);
 					this.lifecycleMetadataCache.put(clazz, metadata);
 				}
@@ -207,6 +214,7 @@ public class InitDestroyAnnotationBeanPostProcessor
 			final List<LifecycleElement> currDestroyMethods = new ArrayList<>();
 
 			ReflectionUtils.doWithLocalMethods(targetClass, method -> {
+				/** 1.这下面的两个if 就是判断处理此类的所有每个方法是否是要求的 init 相关初始方法，如是 封装此method对象 后 加入相应集合**/
 				if (this.initAnnotationType != null && method.isAnnotationPresent(this.initAnnotationType)) {
 					LifecycleElement element = new LifecycleElement(method);
 					currInitMethods.add(element);
@@ -227,7 +235,8 @@ public class InitDestroyAnnotationBeanPostProcessor
 			targetClass = targetClass.getSuperclass();
 		}
 		while (targetClass != null && targetClass != Object.class);
-
+		/**2. 将此类所查询的 init相关方法集合们 共同封装为一个 LifecycleMetadata 对应 此 bean calss类, 后再上层加入缓存！
+		 * this.lifecycleMetadataCache.put(clazz, metadata);*/
 		return new LifecycleMetadata(clazz, initMethods, destroyMethods);
 	}
 
