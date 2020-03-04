@@ -121,7 +121,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @see org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor
  *
  *
- * 主要处理 ：1.@Resource、2. @PostConstruct和@PreDestroy注解的实现
+ * 主要处理 ： 1.@Resource、2. @PostConstruct和@PreDestroy注解的实现
  * Resource的处理是由他自己完成 --> 对应主要是由 缓存 injectionMetadataCache
  * 其他两个如：@PostConstruct和@PreDestroy 是由他的父类完成
  * 父类 InitDestroyAnnotationBeanPostProcessor 的postProcessMergedBeanDefinition
