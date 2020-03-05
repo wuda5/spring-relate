@@ -24,6 +24,7 @@ public class TestFactoryBean {
 		 * 3. 而是会执行此 factorybean 中 的 getObject 对象，其返回的对象才是最终得到的**/
 		FbTest bean1 = (FbTest)ioc.getBean("myFactoryBean");
 		FbTest bean2 = ioc.getBean(FbTest.class);/**1.String[] candidateNames = getBeanNamesForType(requiredType); --allBeanNamesByType --》doGetBeanNamesForType*/
+		FbTest bean3 = ioc.getBean(FbTest.class);/**有一个缓存 factoryBeanObjectCache 放置其实现返回的对象，避免多次来时是new*/
 		System.out.println("equal --- :"+(bean1==bean2));
 
 
